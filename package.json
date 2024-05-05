@@ -1,0 +1,28 @@
+{
+  "name": "intergrate",
+  "version": "1.0.0",
+  "description": "10diem",
+  "main": "sever.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon sever.js"
+  },
+  "keywords": [
+    "nodejs",
+    "react"
+  ],
+  "author": "coder khong biet code",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "msnodesqlv8": "^4.2.1",
+    "mssql": "^10.0.2",
+    "mysql2": "^3.9.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  }
+}

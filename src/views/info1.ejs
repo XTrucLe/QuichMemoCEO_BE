@@ -1,0 +1,84 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="../public/css/home.css">
+</head>
+
+<body>
+    <div class="topnav">
+        <a class="active" href="/home">Home</a>
+        <a href="/create">Create Employee</a>
+        <a href="/payrates">Pay Rates</a>
+    </div>
+
+    <table>
+        <tr>
+            <th>ID employee</th>
+            <th>personal id</th>
+            <th>Last name</th>
+            <th>First Name</th>
+            <th>paidtodate</th>
+            <th>paidlast year</th>
+            <th>value</th>
+            <th>current gender</th>
+            <th>department</th>
+            <th>type_of_work</th>
+            <th>ethnicity</th>
+        </tr>
+
+        <% ListEmployee.forEach(function(Em){ %>
+            <tr>
+                <td>
+                    <%= Em.idEmployee %>
+                </td>
+                <td>
+                    <%= Em.EmployeeNumber %>
+                </td>
+                <td>
+                    <%= Em.LastName%>
+                </td>
+                <td>
+                    <%= Em.FirstName %>
+                </td>
+                <td>
+                    <%= Em.SSN %>
+                </td>
+                <td>
+                    <%= Em.PayRate %>
+                </td>
+                <td>
+                    <%= Em.PayRates_idPayRates %>
+                </td>
+                <td>
+                    <%= Em.VacationDays %>
+                </td>
+                <td>
+                    <%= Em.PaidToDate %>
+                </td>
+                <td>
+                    <%= Em.PaidLastYear %>
+                </td>
+                <td>
+                    <!-- <a href="/getEmployeeId/<%= Em.idEmployee %>">Edit</a> -->
+                    <!-- <button>Edit</button> -->
+                    <form action="/getEmployeeId/<%= Em.idEmployee %>" method="post">
+                        <button>Edit</button>
+
+                    </form>
+                    <form action="/deleteEmployee/<%= Em.idEmployee %>" method="post">
+                        <button>Delete</button>
+
+                    </form>
+                </td>
+            </tr>
+            <%});%>
+
+
+    </table>
+
+</body>
+
+</html>

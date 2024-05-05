@@ -1,0 +1,106 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create</title>
+    <link rel="stylesheet" href="../public/css/home.css">
+</head>
+
+<body>
+    <div class="topnav">
+        <a href="/home">Home</a>
+        <a class="active" href="/create">Create Employee</a>
+        <a href="/payrates">Pay Rates</a>
+    </div>
+    <div class="form">
+        <form action="/createEmployee" method="post">
+            <fieldset>
+                <legend class="nav_form">Form add employee</legend>
+                <div class="inputgroup">
+                    <label for="idem">ID employee:</label>
+                    <input type="number" id="idem" name="idem"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="fname">first name:</label>
+                    <input type="text" id="fname" name="fname"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="lname">Last name:</label>
+                    <input type="text" id="lname" name="lname"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="mname">MIDDLE NAME:</label>
+                    <input type="text" id="mname" name="mname"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="birthday">BIRTH_DATE:</label>
+                    <input type="datetime" id="birthday" name="birthday"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="ssn">SOCIAL_SECURITY_NUMBER:</label>
+                    <input type="text" id="ssn" name="ssn"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="drivers">DRIVERS_LICENSE:</label>
+                    <input type="text" id="drivers" name="drivers"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="adr1">CURRENT_ADDRESS_1</label>
+                    <input type="text" id="adr1" name="adr1"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="adr2">CURRENT_ADDRESS_2</label>
+                    <input type="text" id="adr2" name="adr2"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="curcity">CURRENT_CITY</label>
+                    <input type="text" id="curcity" name="curcity"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="curcountry">CURRENT_COUNTRY</label>
+                    <input type="text" id="curcountry" name="curcountry"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="curzip">CURRENT_ZIP</label>
+                    <input type="number" id="curzip" name="curzip"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="curgen">CURRENT_GENDER</label>
+                    <input type="text" id="curgen" name="curgen"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="curphone">CURRENT_PHONE_NUMBER</label>
+                    <input type="text" id="curphone" name="curphone"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="curmail">CURRENT_PERSONAL_EMAIL</label>
+                    <input type="email" id="curmail" name="curmail"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="curstt">CURRENT_MARITAL_STATUS</label>
+                    <input type="text" id="curstt" name="curstt"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="ethnicity">ETHNICITY</label>
+                    <input type="text" id="ethnicity" name="ethnicity"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="sharestt">SHAREHOLDER_STATUS</label>
+                    <input type="number" id="sharestt" name="sharestt"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="benefitid">BENEFIT_PLAN_ID</label>
+                    <input type="number" id="benefitid" name="benefitid"><br><br>
+                </div>
+
+                <div>
+                    <button>SAVE</button>
+                </div>
+            </fieldset>
+        </form>
+
+    </div>
+</body>
+
+</html>

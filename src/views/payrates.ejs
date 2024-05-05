@@ -1,0 +1,64 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="../public/css/home.css">
+</head>
+
+<body>
+    <div class="topnav">
+        <a href="/home">Home</a>
+        <a href="/create">Create Employee</a>
+        <a class="active" href="/payrates">Pay Rates</a>
+    </div>
+
+    <table>
+        <tr>
+            <th>idPay Rate</th>
+            <th>Pay Rate Name</th>
+            <th>Value</th>
+            <th>Tax Percentage</th>
+            <th>Pay Type</th>
+            <th>Pay Amount</th>
+            <th>PT - Level C</th>
+            <th>Action</th>
+
+        </tr>
+
+        <% List_payrate.forEach(function(payrates){ %>
+            <tr>
+                <td>
+                    <%= payrates['idPay Rates'] %>
+                </td>
+                <td>
+                    <%= payrates['Pay Rate Name'] %>
+                </td>
+                <td>
+                    <%= payrates.Value %>
+                </td>
+                <td>
+                    <%= payrates['Tax Percentage'] %>
+                </td>
+                <td>
+                    <%= payrates['Pay Type'] %>
+                </td>
+                <td>
+                    <%= payrates['Pay Amount'] %>
+                </td>
+                <td>
+                    <%= payrates['PT - Level C'] %>
+                </td>
+
+
+            </tr>
+
+            <%});%>
+
+
+    </table>
+
+</body>
+
+</html>
