@@ -1,6 +1,6 @@
 const { getEmployeeDataFromMySql, getEmployeeDataFromSqlServer,
-    getall_shareholder, getall_birthday,
-
+    getall_shareholder, getall_birthday, getall_planefect,
+    getall_employee_more_vacation, createEm, createPer,
 } = require('../services/service');
 
 const see_income = async (req, res) => {
@@ -89,9 +89,52 @@ const see_birthday = async (req, res) => {
     const data = await getall_birthday();
     return res.json({ data });
 };
+const see_efectplan = async (req, res) => {
+    const data = await getall_planefect();
+    return res.json({ data });
+};
+
+const see_employee_more_vacation = async (req, res) => {
+    const data = await getall_employee_more_vacation();
+    return res.json({ data });
+};
+
+
+//CROD
+// const createEmployee = async (req, res) => {
+//     let { idem, emnum, lname, fname, ssn, payrate, idpayrate, vcd, paidtodate, paidlastyear } = req.body;
+
+//     await createEm(idem, emnum, lname, fname, ssn, payrate, idpayrate, vcd, paidtodate, paidlastyear)
+//     let results = await getallusers();
+//     return res.json({ employee_create: results });
+//     //=====>đưa ra chuỗi 
+
+// };
+const create = (req, res) => {
+    res.render('cr_em_sqlsever.ejs')
+}
+
+const creates = async (req, res) => {
+    try {
+        const {
+            idem, lname, fname, mname, birthday, ssn, drivers, adr1, adr2,
+            curcity, curcountry, curzip, curgen, curphone, curmail, curstt,
+            ethnicity, sharestt, benefitid, emnum, payrate, idpayrate, vcd, paidtodate, paidlastyear
+        } = req.body;
+        await createPer(idem, lname, fname, mname, birthday, ssn, drivers, adr1, adr2, curcity, curcountry, curzip,
+            curgen, curphone, curmail, curstt, ethnicity, sharestt, benefitid);
+        await createEm(idem, emnum, lname, fname, ssn, payrate, idpayrate, vcd, paidtodate, paidlastyear)
+        res.send('Employee created successfully.');
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).send('An error occurred while creating the employee.');
+    }
+};
+
 
 
 module.exports = {
     see_income, see_vacationday,
-    see_avg_shareholder, see_birthday
+    see_avg_shareholder, see_birthday, see_efectplan,
+    see_employee_more_vacation, create, creates
 };

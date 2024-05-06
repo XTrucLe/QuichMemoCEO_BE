@@ -6,7 +6,9 @@ const express = require('express');
 //     createpersonal, getbenefit, getemployment, getemployment_working, getjob_history, getpersonal,
 // getidpersonal,} = require('../controlers/homeControler');
 const { see_income, see_vacationday,
-    see_avg_shareholder, see_birthday
+    see_avg_shareholder, see_birthday,
+    see_efectplan, see_employee_more_vacation,
+    create, creates,
 
 } = require('../controlers/controler')
 const router = express.Router();
@@ -46,6 +48,12 @@ router.get('/vacation_days', see_vacationday)
 router.get('/shareholder', see_avg_shareholder)
 // inform
 router.get('/birthday', see_birthday)
+router.get('/efectplan', see_efectplan)
+router.get('/more_vacation', see_employee_more_vacation)
+//
+
+router.get('/create', create)
+router.post('/creates', creates)
 
 
 

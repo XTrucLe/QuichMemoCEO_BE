@@ -122,7 +122,6 @@ GROUP BY
 }
 
 
-
 const getall_birthday = async () => {
     try {
         const pool = await poolPromise;
@@ -138,8 +137,127 @@ WHERE MONTH(BIRTH_DATE) = MONTH(GETDATE())
         throw error;
     }
 }
+
+const getall_planefect = async () => {
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request().query(`
+        SELECT 
+        P.PERSONAL_ID,
+    P.CURRENT_FIRST_NAME,
+    P.CURRENT_LAST_NAME,
+    P.SOCIAL_SECURITY_NUMBER,
+    P.CURRENT_ADDRESS_1,
+    P.CURRENT_PHONE_NUMBER,
+    P.CURRENT_PERSONAL_EMAIL,
+    E.NUMBER_DAYS_REQUIREMENT_OF_WORKING_PER_MONTH,
+    ET.NUMBER_DAYS_ACTUAL_OF_WORKING_PER_MONTH,
+    ET.TOTAL_NUMBER_VACATION_WORKING_DAYS_PER_MONTH
+FROM 
+    PERSONAL P
+JOIN 
+    EMPLOYMENT E ON P.PERSONAL_ID = E.PERSONAL_ID
+JOIN 
+    EMPLOYMENT_WORKING_TIME ET ON E.EMPLOYMENT_ID = ET.EMPLOYMENT_ID
+WHERE 
+    ET.TOTAL_NUMBER_VACATION_WORKING_DAYS_PER_MONTH > 3;
+        `);
+
+        return result.recordset;
+    } catch (error) {
+        console.error('Error fetching data from SQL Server:', error);
+        throw error;
+    }
+}
+
+const getall_employee_more_vacation = async () => {
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request().query(`
+        SELECT 
+        P.PERSONAL_ID,
+    P.CURRENT_FIRST_NAME,
+    P.CURRENT_LAST_NAME,
+    P.SOCIAL_SECURITY_NUMBER,
+    P.CURRENT_ADDRESS_1,
+    P.CURRENT_PHONE_NUMBER,
+    P.CURRENT_PERSONAL_EMAIL,
+    E.NUMBER_DAYS_REQUIREMENT_OF_WORKING_PER_MONTH,
+    ET.NUMBER_DAYS_ACTUAL_OF_WORKING_PER_MONTH,
+    ET.TOTAL_NUMBER_VACATION_WORKING_DAYS_PER_MONTH
+FROM 
+    PERSONAL P
+JOIN 
+    EMPLOYMENT E ON P.PERSONAL_ID = E.PERSONAL_ID
+JOIN 
+    EMPLOYMENT_WORKING_TIME ET ON E.EMPLOYMENT_ID = ET.EMPLOYMENT_ID
+WHERE 
+    ET.TOTAL_NUMBER_VACATION_WORKING_DAYS_PER_MONTH >= 6;
+        `);
+
+        return result.recordset;
+    } catch (error) {
+        console.error('Error fetching data from SQL Server:', error);
+        throw error;
+    }
+}
+
+const createEm = async (idem, emnum, lname, fname, ssn, payrate, idpayrate, vcd, paidtodate, paidlastyear) => {
+    let [results, fields] = await connection.query(
+        'INSERT INTO `mydb`.`employee` (`idEmployee`, `EmployeeNumber`, `LastName`, `FirstName`, `SSN`, `PayRate`, `PayRates_idPayRates`, `VacationDays`, `PaidToDate`, `PaidLastYear`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [idem, emnum, lname, fname, ssn, payrate, idpayrate, vcd, paidtodate, paidlastyear],
+
+    );
+}
+const createPer = async (idem, lname, fname, mname, birthday, ssn, drivers, adr1, adr2, curcity, curcountry, curzip, curgen, curphone, curmail, curstt, ethnicity, sharestt, benefitid) => {
+    try {
+        const pool = await poolPromise;
+        const request = pool.request();
+
+        const query = `
+            INSERT INTO [dbo].[PERSONAL] (
+                PERSONAL_ID, CURRENT_FIRST_NAME, CURRENT_LAST_NAME, CURRENT_MIDDLE_NAME, BIRTH_DATE,
+                SOCIAL_SECURITY_NUMBER, DRIVERS_LICENSE, CURRENT_ADDRESS_1, CURRENT_ADDRESS_2, CURRENT_CITY,
+                CURRENT_COUNTRY, CURRENT_ZIP, CURRENT_GENDER, CURRENT_PHONE_NUMBER, CURRENT_PERSONAL_EMAIL,
+                CURRENT_MARITAL_STATUS, ETHNICITY, SHAREHOLDER_STATUS, BENEFIT_PLAN_ID
+            )
+            VALUES (@idem, @fname, @lname, @mname, @birthday, @ssn, @drivers, @adr1, @adr2, @curcity,
+                @curcountry, @curzip, @curgen, @curphone, @curmail, @curstt, @ethnicity, @sharestt, @benefitid)
+        `;
+
+        const result = await request
+            .input('idem', idem)
+            .input('fname', sql.NVarChar(255), fname)
+            .input('lname', sql.NVarChar(255), lname)
+            .input('mname', sql.NVarChar(255), mname)
+            .input('birthday', sql.NVarChar(255), birthday)
+            .input('ssn', sql.NVarChar(255), ssn)
+            .input('drivers', sql.NVarChar(255), drivers)
+            .input('adr1', sql.NVarChar(255), adr1)
+            .input('adr2', sql.NVarChar(255), adr2)
+            .input('curcity', sql.NVarChar(255), curcity)
+            .input('curcountry', sql.NVarChar(255), curcountry)
+            .input('curzip', sql.Int, curzip)
+            .input('curgen', sql.NVarChar(255), curgen)
+            .input('curphone', sql.NVarChar(255), curphone)
+            .input('curmail', sql.NVarChar(255), curmail)
+            .input('curstt', sql.NVarChar(255), curstt)
+            .input('ethnicity', sql.NVarChar(255), ethnicity)
+            .input('sharestt', sql.NVarChar(255), sharestt)
+            .input('benefitid', sql.NVarChar(255), benefitid)
+            .query(query);
+
+        return result;
+
+    } catch (error) {
+        console.error('Error creating employee:', error);
+        throw error;
+    }
+};
 module.exports = {
     getEmployeeDataFromMySql,
-    getall_birthday,
-    getEmployeeDataFromSqlServer, getall_shareholder
+    getall_birthday, getall_planefect,
+    getEmployeeDataFromSqlServer, getall_shareholder,
+    getall_employee_more_vacation, createEm,
+    createPer,
 }

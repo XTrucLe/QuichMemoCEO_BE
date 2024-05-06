@@ -15,7 +15,6 @@ const getallemployment = async () => {
     const result = await request.query(query);
     return result.recordset; // return only the recordset for further handling in the controller
 };
-
 const getallemployment_working = async () => {
     const pool = await poolPromise;
     const request = pool.request();
@@ -46,7 +45,15 @@ const getIdpersonal = async (personalid) => {
     const result = await request.query(query);
     return result.recordset;
 };
+const createEmployee = async (req, res) => {
+    let { idem, emnum, lname, fname, ssn, payrate, idpayrate, vcd, paidtodate, paidlastyear } = req.body;
 
+    await createEm(idem, emnum, lname, fname, ssn, payrate, idpayrate, vcd, paidtodate, paidlastyear)
+    let results = await getallusers();
+    return res.json({ employee_create: results });
+    //=====>đưa ra chuỗi 
+
+};
 const createAllpersonal = async (idem, lname, fname, mname, birthday, ssn, drivers, adr1, adr2, curcity, curcountry, curzip, curgen, curphone, curmail, curstt, ethnicity, sharestt, benefitid) => {
     try {
         const pool = await poolPromise;
