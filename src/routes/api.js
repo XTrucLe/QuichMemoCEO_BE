@@ -8,16 +8,16 @@ const express = require('express');
 const { see_income, see_vacationday,
     see_avg_shareholder, see_birthday,
     see_efectplan, see_employee_more_vacation,
-    create, creates,
+    create_render, creates, gethomepage, getEmployeeId,
+    dash_board_department,
 
 } = require('../controlers/controler')
 const router = express.Router();
 //-----------------------------------------------------------
 //employee{
 //     router.get('/', gethomecontroler)
-//     router.get('/home', gethomepage)
+router.get('/home', gethomepage)
 //     router.get('/create', create)
-//     // router.post('/getEmployeeId/:id', getEmployeeId)
 //     router.get('/create', create)
 //     router.post('/deleteEmployee/:id', deleteEmployee)
 //     router.post('/deleteinfo', deleteinfo)
@@ -50,10 +50,14 @@ router.get('/shareholder', see_avg_shareholder)
 router.get('/birthday', see_birthday)
 router.get('/efectplan', see_efectplan)
 router.get('/more_vacation', see_employee_more_vacation)
-//
+//CROD
 
-router.get('/create', create)
+router.get('/create', create_render)
 router.post('/creates', creates)
+router.post('/personal/:id', getEmployeeId)
+//DASHBOARD
+router.get('/dashboard', dash_board_department)
+
 
 
 

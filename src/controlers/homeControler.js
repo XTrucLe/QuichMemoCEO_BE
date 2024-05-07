@@ -124,6 +124,9 @@ const getidpersonal = async (req, res) => {
     res.json({ employee_update: employee })
 
 }
+
+
+
 module.exports = {
     gethomecontroler, gethomepage, createEmployee, create, getEmployeeId, updateinfo,
     deleteEmployee, deleteinfo,

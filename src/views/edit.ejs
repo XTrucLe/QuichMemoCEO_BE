@@ -11,66 +11,110 @@
     <div class="topnav">
         <a href="/home">Home</a>
         <a href="/create">Create Employee</a>
-        <a href="/payrate">Pay Rates</a>
-
+        <a href="/payrates">Pay Rates</a>
     </div>
     <div class="form">
         <form action="/updateinfo" method="post">
             <fieldset>
-                <legend class="nav_form">Form Update Employee</legend>
+                <legend class="nav_form">Update Employee Details</legend>
+                <div class="inputgroup">
+                    <label for="idem">PERSONAL ID:</label>
+                    <input type="text" id="idem" name="idem" value="<%= employee_update[0].PERSONAL_ID %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="fname">First Name:</label>
+                    <input type="text" id="fname" name="fname"
+                        value="<%= employee_update[0].CURRENT_FIRST_NAME %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="lname">Last Name:</label>
+                    <input type="text" id="lname" name="lname"
+                        value="<%= employee_update[0].CURRENT_LAST_NAME %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="mname">Middle Name:</label>
+                    <input type="text" id="mname" name="mname"
+                        value="<%= employee_update[0].CURRENT_MIDDLE_NAME %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="birthday">Birth Date:</label>
+                    <input type="date" id="birthday" name="birthday"
+                        value="<%= employee_update[0].BIRTH_DATE %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="ssn">Social Security Number:</label>
+                    <input type="text" id="ssn" name="ssn"
+                        value="<%= employee_update[0].SOCIAL_SECURITY_NUMBER %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="drivers">Driver's License:</label>
+                    <input type="text" id="drivers" name="drivers"
+                        value="<%= employee_update[0].DRIVERS_LICENSE %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="adr1">Address 1:</label>
+                    <input type="text" id="adr1" name="adr1"
+                        value="<%= employee_update[0].CURRENT_ADDRESS_1 %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="adr2">Address 2:</label>
+                    <input type="text" id="adr2" name="adr2"
+                        value="<%= employee_update[0].CURRENT_ADDRESS_2 %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="curcity">City:</label>
+                    <input type="text" id="curcity" name="curcity"
+                        value="<%= employee_update[0].CURRENT_CITY %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="curcountry">Country:</label>
+                    <input type="text" id="curcountry" name="curcountry"
+                        value="<%= employee_update[0].CURRENT_COUNTRY %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="curzip">ZIP:</label>
+                    <input type="text" id="curzip" name="curzip" value="<%= employee_update[0].CURRENT_ZIP %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="curgen">Gender:</label>
+                    <input type="text" id="curgen" name="curgen"
+                        value="<%= employee_update[0].CURRENT_GENDER %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="curphone">Phone Number:</label>
+                    <input type="text" id="curphone" name="curphone"
+                        value="<%= employee_update[0].CURRENT_PHONE_NUMBER %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="curmail">Personal Email:</label>
+                    <input type="email" id="curmail" name="curmail"
+                        value="<%= employee_update[0].CURRENT_PERSONAL_EMAIL %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="curstt">Marital Status:</label>
+                    <input type="text" id="curstt" name="curstt"
+                        value="<%= employee_update[0].CURRENT_MARITAL_STATUS %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="ethnicity">Ethnicity:</label>
+                    <input type="text" id="ethnicity" name="ethnicity"
+                        value="<%= employee_update[0].ETHNICITY %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="sharestt">Shareholder Status:</label>
+                    <input type="text" id="sharestt" name="sharestt"
+                        value="<%= employee_update[0].SHAREHOLDER_STATUS %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="benefitid">Benefit Plan ID:</label>
+                    <input type="text" id="benefitid" name="benefitid"
+                        value="<%= employee_update[0].BENEFIT_PLAN_ID %>"><br><br>
+                </div>
                 <div>
-                    <div class="inputgroup none">
-                        <label for="idem">ID employee:</label>
-                        <input type="number" id="idem" name="idem" value="<%= employee_update['idEmployee']%>"><br><br>
-                    </div>
-                    <div class="inputgroup">
-                        <label for="emnum">Employee Number:</label>
-                        <input type="number" id="emnum" name="emnum"
-                            value="<%= employee_update['EmployeeNumber']%>"><br><br>
-                    </div>
-                    <div class="inputgroup">
-                        <label for="lname">Last name:</label>
-                        <input type="text" id="lname" name="lname" value="<%= employee_update['LastName'] %>"><br><br>
-                    </div>
-                    <div class="inputgroup">
-                        <label for="fname">first name:</label>
-                        <input type="text" id="fname" name="fname" value="<%= employee_update['FirstName']%>"><br><br>
-                    </div>
-                    <div class="inputgroup">
-                        <label for="ssn">SSN:</label>
-                        <input type="number" id="ssn" name="ssn" value="<%= employee_update.SSN%>"><br><br>
-                    </div>
-                    <div class="inputgroup">
-                        <label for="payrate">Pay Rate:</label>
-                        <input type="text" id="payrate" name="payrate" value="<%= employee_update['PayRate']%>"><br><br>
-                    </div>
-                    <div class="inputgroup">
-                        <label for="idpayrate">Pay Rates_idPay Rates:</label>
-                        <input type="number" id="idpayrate" name="idpayrate"
-                            value="<%= employee_update['PayRates_idPayRates']%>"><br><br>
-                    </div>
-                    <div class="inputgroup">
-                        <label for="vcd">Vacation Days:</label>
-                        <input type="number" id="vcd" name="vcd" value="<%= employee_update['VacationDays']%>"><br><br>
-                    </div>
-                    <div class="inputgroup">
-                        <label for="paidtodate">Paid To Date:</label>
-                        <input type="number" id="paidtodate" name="paidtodate"
-                            value="<%= employee_update['PaidToDate']%>"><br><br>
-                    </div>
-                    <div class="inputgroup">
-                        <label for="paidlastyear">Paid Last Year:</label>
-                        <input type="number" id="paidlastyear" name="paidlastyear"
-                            value="<%= employee_update['PaidLastYear']%>"><br><br>
-                    </div>
-
-                    <div>
-                        <button>SAVE</button>
-                    </div>
+                    <button>SAVE</button>
                 </div>
             </fieldset>
         </form>
-
     </div>
 </body>
 

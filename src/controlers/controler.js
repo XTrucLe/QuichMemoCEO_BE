@@ -1,7 +1,12 @@
 const { getEmployeeDataFromMySql, getEmployeeDataFromSqlServer,
     getall_shareholder, getall_birthday, getall_planefect,
     getall_employee_more_vacation, createEm, createPer,
+    getallpersonal, getIdpersonal,
+    get_dash_board_department,
 } = require('../services/service');
+
+
+
 
 const see_income = async (req, res) => {
     try {
@@ -89,6 +94,7 @@ const see_birthday = async (req, res) => {
     const data = await getall_birthday();
     return res.json({ data });
 };
+
 const see_efectplan = async (req, res) => {
     const data = await getall_planefect();
     return res.json({ data });
@@ -101,16 +107,8 @@ const see_employee_more_vacation = async (req, res) => {
 
 
 //CROD
-// const createEmployee = async (req, res) => {
-//     let { idem, emnum, lname, fname, ssn, payrate, idpayrate, vcd, paidtodate, paidlastyear } = req.body;
 
-//     await createEm(idem, emnum, lname, fname, ssn, payrate, idpayrate, vcd, paidtodate, paidlastyear)
-//     let results = await getallusers();
-//     return res.json({ employee_create: results });
-//     //=====>đưa ra chuỗi 
-
-// };
-const create = (req, res) => {
+const create_render = (req, res) => {
     res.render('cr_em_sqlsever.ejs')
 }
 
@@ -131,10 +129,27 @@ const creates = async (req, res) => {
     }
 };
 
+const gethomepage = async (req, res) => {
+    let results = await getallpersonal();
+    return res.render('home_personal.ejs', { personal: results })
+}
 
+const getEmployeeId = async (req, res) => {
+    const personalid = req.params.id;
+    let personal = await getIdpersonal(personalid);
+    res.render('edit.ejs', { employee_update: personal });
+}
+const dash_board_department = async (req, res) => {
+    const data = await get_dash_board_department();
+    return res.json({ data });
+
+}
 
 module.exports = {
+    gethomepage,
     see_income, see_vacationday,
     see_avg_shareholder, see_birthday, see_efectplan,
-    see_employee_more_vacation, create, creates
+    see_employee_more_vacation,
+    create_render, creates, getEmployeeId,
+    dash_board_department,
 };

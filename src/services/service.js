@@ -3,12 +3,14 @@ const poolPromise = require('../config/conn_sqlsever');
 const sql = require('mssql');
 
 
+
 const getEmployeeDataFromMySql = async () => {
     let [results, fields] = await connection.query(`SELECT e.*, p.*
     FROM mydb.employee e
     JOIN mydb.payrates p ON e.PayRates_idPayRates = p.idPayRates;`)
     return results
 }
+
 const getEmployeeDataFromSqlServer = async () => {
     try {
         const pool = await poolPromise;
@@ -121,7 +123,6 @@ GROUP BY
     }
 }
 
-
 const getall_birthday = async () => {
     try {
         const pool = await poolPromise;
@@ -209,6 +210,7 @@ const createEm = async (idem, emnum, lname, fname, ssn, payrate, idpayrate, vcd,
 
     );
 }
+
 const createPer = async (idem, lname, fname, mname, birthday, ssn, drivers, adr1, adr2, curcity, curcountry, curzip, curgen, curphone, curmail, curstt, ethnicity, sharestt, benefitid) => {
     try {
         const pool = await poolPromise;
@@ -254,10 +256,42 @@ const createPer = async (idem, lname, fname, mname, birthday, ssn, drivers, adr1
         throw error;
     }
 };
+
+const getallpersonal = async () => {
+    const pool = await poolPromise;
+    const request = pool.request();
+    const query = 'SELECT * FROM [dbo].[PERSONAL];';
+    const result = await request.query(query);
+    return result.recordset; // return only the recordset for further handling in the controller
+};
+
+const getIdpersonal = async (personalid) => {
+    const pool = await poolPromise;
+    const request = pool.request();
+    request.input('personalid', sql.Int, personalid);
+    const query = 'SELECT * FROM [dbo].[PERSONAL] WHERE PERSONAL_ID = @personalid';
+    const result = await request.query(query);
+    return result.recordset;
+};
+
+const get_dash_board_department = async (personalid) => {
+    const pool = await poolPromise;
+    const request = pool.request();
+    request.input('personalid', sql.Int, personalid);
+    const query = `SELECT JH.DEPARTMENT, COUNT(P.PERSONAL_ID) AS PERSON_COUNT
+    FROM JOB_HISTORY JH
+    INNER JOIN EMPLOYMENT E ON JH.EMPLOYMENT_ID = E.EMPLOYMENT_ID
+    INNER JOIN PERSONAL P ON E.PERSONAL_ID = P.PERSONAL_ID
+    GROUP BY JH.DEPARTMENT;`;
+    const result = await request.query(query);
+    return result.recordset;
+};
 module.exports = {
     getEmployeeDataFromMySql,
     getall_birthday, getall_planefect,
     getEmployeeDataFromSqlServer, getall_shareholder,
-    getall_employee_more_vacation, createEm,
-    createPer,
+    getall_employee_more_vacation,
+    createEm, createPer, getallpersonal, getIdpersonal,
+    get_dash_board_department,
+
 }
