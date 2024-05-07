@@ -202,8 +202,8 @@ WHERE
         throw error;
     }
 }
-
-const createEm = async (idem, emnum, lname, fname, ssn, payrate, idpayrate, vcd, paidtodate, paidlastyear) => {
+//create
+const create_mydb_Em = async (idem, emnum, lname, fname, ssn, payrate, idpayrate, vcd, paidtodate, paidlastyear) => {
     let [results, fields] = await connection.query(
         'INSERT INTO `mydb`.`employee` (`idEmployee`, `EmployeeNumber`, `LastName`, `FirstName`, `SSN`, `PayRate`, `PayRates_idPayRates`, `VacationDays`, `PaidToDate`, `PaidLastYear`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
         [idem, emnum, lname, fname, ssn, payrate, idpayrate, vcd, paidtodate, paidlastyear],
@@ -257,6 +257,199 @@ const createPer = async (idem, lname, fname, mname, birthday, ssn, drivers, adr1
     }
 };
 
+const create_HRM_Em = async (employmentCode, employmentStatus, hireDateForWorking, workersCompCode,
+    terminationDate, rehireDateForWorking, lastReviewDate, numberDaysRequirementOfWorkingPerMonth, personalId) => {
+    try {
+        const pool = await poolPromise;
+        const request = pool.request();
+
+        const query = `
+            INSERT INTO [dbo].[EMPLOYMENT] (
+                [EMPLOYMENT_CODE],
+                [EMPLOYMENT_STATUS],
+                [HIRE_DATE_FOR_WORKING],
+                [WORKERS_COMP_CODE],
+                [TERMINATION_DATE],
+                [REHIRE_DATE_FOR_WORKING],
+                [LAST_REVIEW_DATE],
+                [NUMBER_DAYS_REQUIREMENT_OF_WORKING_PER_MONTH],
+                [PERSONAL_ID]
+            )
+            VALUES (
+                @employmentCode,
+                @employmentStatus,
+                @hireDateForWorking,
+                @workersCompCode,
+                @terminationDate,
+                @rehireDateForWorking,
+                @lastReviewDate,
+                @numberDaysRequirementOfWorkingPerMonth,
+                @personalId
+            )
+        `;
+
+        const result = await request
+            .input('employmentCode', employmentCode)
+            .input('employmentStatus', employmentStatus)
+            .input('hireDateForWorking', hireDateForWorking)
+            .input('workersCompCode', workersCompCode)
+            .input('terminationDate', terminationDate)
+            .input('rehireDateForWorking', rehireDateForWorking)
+            .input('lastReviewDate', lastReviewDate)
+            .input('numberDaysRequirementOfWorkingPerMonth', numberDaysRequirementOfWorkingPerMonth)
+            .input('personalId', personalId)
+            .query(query);
+
+        return result;
+
+    } catch (error) {
+        console.error('Error creating employee:', error);
+        throw error;
+    }
+};
+
+const create_em_working_time = async (employmentId, yearWorking, monthWorking,
+    numberDaysActualOfWorkingPerMonth, totalNumberVacationWorkingDaysPerMonth) => {
+    try {
+        const pool = await poolPromise;
+        const request = pool.request();
+
+        const query = `
+            INSERT INTO [dbo].[EMPLOYMENT_WORKING_TIME] (
+                [EMPLOYMENT_ID],
+                [YEAR_WORKING],
+                [MONTH_WORKING],
+                [NUMBER_DAYS_ACTUAL_OF_WORKING_PER_MONTH],
+                [TOTAL_NUMBER_VACATION_WORKING_DAYS_PER_MONTH]
+            )
+            VALUES (
+                @employmentId,
+                @yearWorking,
+                @monthWorking,
+                @numberDaysActualOfWorkingPerMonth,
+                @totalNumberVacationWorkingDaysPerMonth
+            )
+        `;
+
+        const result = await request
+            .input('employmentId', employmentId)
+            .input('yearWorking', yearWorking)
+            .input('monthWorking', monthWorking)
+            .input('numberDaysActualOfWorkingPerMonth', numberDaysActualOfWorkingPerMonth)
+            .input('totalNumberVacationWorkingDaysPerMonth', totalNumberVacationWorkingDaysPerMonth)
+            .query(query);
+
+        return result;
+
+    } catch (error) {
+        console.error('Error creating employment working time:', error);
+        throw error;
+    }
+};
+
+const createJobHistory = async (employmentId, department, division,
+    fromDate, thruDate, jobTitle, supervisor, location, typeOfWork) => {
+    try {
+        const pool = await poolPromise;
+        const request = pool.request();
+
+        const query = `
+            INSERT INTO [dbo].[JOB_HISTORY] (
+                [EMPLOYMENT_ID],
+                [DEPARTMENT],
+                [DIVISION],
+                [FROM_DATE],
+                [THRU_DATE],
+                [JOB_TITLE],
+                [SUPERVISOR],
+                [LOCATION],
+                [TYPE_OF_WORK]
+            )
+            VALUES (
+                @employmentId,
+                @department,
+                @division,
+                @fromDate,
+                @thruDate,
+                @jobTitle,
+                @supervisor,
+                @location,
+                @typeOfWork
+            )
+        `;
+
+        const result = await request
+            .input('employmentId', employmentId)
+            .input('department', department)
+            .input('division', division)
+            .input('fromDate', fromDate)
+            .input('thruDate', thruDate)
+            .input('jobTitle', jobTitle)
+            .input('supervisor', supervisor)
+            .input('location', location)
+            .input('typeOfWork', typeOfWork)
+            .query(query);
+
+        return result;
+
+    } catch (error) {
+        console.error('Error creating job history:', error);
+        throw error;
+    }
+};
+
+const createBenefitPlan = async (benefitid, planName, deductable, percentageCopay) => {
+    try {
+        const pool = await poolPromise;
+        const request = pool.request();
+
+        const query = `
+            INSERT INTO [dbo].[BENEFIT_PLANS] (
+                BENEFIT_PLANS_ID,
+                [PLAN_NAME],
+                [DEDUCTABLE],
+                [PERCENTAGE_COPAY]
+            )
+            VALUES (
+                @benefitid,
+                @planName,
+                @deductable,
+                @percentageCopay
+            )
+        `;
+
+        const result = await request
+            .input('benefitid', benefitid)
+            .input('planName', planName)
+            .input('deductable', deductable)
+            .input('percentageCopay', percentageCopay)
+            .query(query);
+
+        return result;
+
+    } catch (error) {
+        console.error('Error creating benefit plan:', error);
+        throw error;
+    }
+};
+
+//Delete
+// const deletebypecrson = async (id) => {
+//     let [results, fields] = await connection.query(
+//         'DELETE FROM `mydb`.`employee`WHERE `idEmployee` = ?;',
+//         [id]
+//     )
+// }
+// const deletebyperson = async (personalid) => {
+//     const pool = await poolPromise;
+//     const request = pool.request();
+//     request.input('personalid', sql.Int, personalid);
+//     const query = 'DELETE FROM [dbo].[PERSONAL] WHERE PERSONAL_ID = @personalId';
+//     const result = await request.query(query);
+//     return result.recordset;
+
+// };
+//getid
 const getallpersonal = async () => {
     const pool = await poolPromise;
     const request = pool.request();
@@ -273,7 +466,7 @@ const getIdpersonal = async (personalid) => {
     const result = await request.query(query);
     return result.recordset;
 };
-
+//dashboard
 const get_dash_board_department = async (personalid) => {
     const pool = await poolPromise;
     const request = pool.request();
@@ -286,12 +479,35 @@ const get_dash_board_department = async (personalid) => {
     const result = await request.query(query);
     return result.recordset;
 };
+
+const get_dash_board_department_vacation = async (personalid) => {
+    const pool = await poolPromise;
+    const request = pool.request();
+    request.input('personalid', sql.Int, personalid);
+    const query = `SELECT J.DEPARTMENT, SUM(EW.TOTAL_NUMBER_VACATION_WORKING_DAYS_PER_MONTH) AS TotalVacationDays
+    FROM JOB_HISTORY J
+    JOIN EMPLOYMENT E ON J.EMPLOYMENT_ID = E.EMPLOYMENT_ID
+    JOIN EMPLOYMENT_WORKING_TIME EW ON E.EMPLOYMENT_ID = EW.EMPLOYMENT_ID
+    GROUP BY J.DEPARTMENT;`;
+    const result = await request.query(query);
+    return result.recordset;
+};
+
+
 module.exports = {
     getEmployeeDataFromMySql,
     getall_birthday, getall_planefect,
     getEmployeeDataFromSqlServer, getall_shareholder,
     getall_employee_more_vacation,
-    createEm, createPer, getallpersonal, getIdpersonal,
-    get_dash_board_department,
+    create_mydb_Em, createPer, getallpersonal, getIdpersonal,
+    get_dash_board_department, create_HRM_Em,
+    create_em_working_time, createJobHistory, createBenefitPlan,
+    // deletebyperson,
+
+
+
+
+
+    get_dash_board_department_vacation
 
 }
