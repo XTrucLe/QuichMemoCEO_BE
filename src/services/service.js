@@ -266,8 +266,7 @@ const createPer = async (idem, lname, fname, mname, birthday, ssn, drivers, adr1
     }
 };
 
-const create_HRM_Em = async (employmentCode, employmentStatus, hireDateForWorking, workersCompCode,
-    terminationDate, rehireDateForWorking, lastReviewDate, numberDaysRequirementOfWorkingPerMonth, personalId) => {
+const create_HRM_Em = async (employmentCode, employmentStatus, hireDateForWorking, workersCompCode, terminationDate, rehireDateForWorking, lastReviewDate, numberDaysRequirementOfWorkingPerMonth, personalId) => {
     try {
         const pool = await poolPromise;
         const request = pool.request();
@@ -317,8 +316,7 @@ const create_HRM_Em = async (employmentCode, employmentStatus, hireDateForWorkin
     }
 };
 
-const create_em_working_time = async (employmentId, yearWorking, monthWorking,
-    numberDaysActualOfWorkingPerMonth, totalNumberVacationWorkingDaysPerMonth) => {
+const create_em_working_time = async (employmentId, yearWorking, monthWorking, numberDaysActualOfWorkingPerMonth, totalNumberVacationWorkingDaysPerMonth) => {
     try {
         const pool = await poolPromise;
         const request = pool.request();
@@ -356,8 +354,7 @@ const create_em_working_time = async (employmentId, yearWorking, monthWorking,
     }
 };
 
-const createJobHistory = async (employmentId, department, division,
-    fromDate, thruDate, jobTitle, supervisor, location, typeOfWork) => {
+const createJobHistory = async (employmentId, department, division, fromDate, thruDate, jobTitle, supervisor, location, typeOfWork) => {
     try {
         const pool = await poolPromise;
         const request = pool.request();
@@ -460,11 +457,55 @@ const getIdpersonal = async (personalid) => {
     const result = await request.query(query);
     return result.recordset;
 };
+const getIdemployment = async (personalid) => {
+    const pool = await poolPromise;
+    const request = pool.request();
+    request.input('personalid', sql.Int, personalid);
+    const query = 'SELECT * FROM [dbo].[EMPLOYMENT] WHERE PERSONAL_ID = @personalid';
+    const result = await request.query(query);
+    return result.recordset;
+};
+const getIdemploymentworking = async (personalid) => {
+    const pool = await poolPromise;
+    const request = pool.request();
+    request.input('personalid', sql.Int, personalid);
+    const query = 'SELECT * FROM [dbo].[EMPLOYMENT_WORKING_TIME] WHERE EMPLOYMENT_ID = @personalid';
+    const result = await request.query(query);
+    return result.recordset;
+};
+const getIdjobhistory = async (personalid) => {
+    const pool = await poolPromise;
+    const request = pool.request();
+    request.input('personalid', sql.Int, personalid);
+    const query = 'SELECT * FROM [dbo].[JOB_HISTORY] WHERE EMPLOYMENT_ID = @personalid';
+    const result = await request.query(query);
+    return result.recordset;
+};
+//xem lại
+const getIdbenefit = async (personalid) => {
+    const pool = await poolPromise;
+    const request = pool.request();
+    request.input('personalid', sql.Int, personalid);
+    const query = 'SELECT * FROM [dbo].[BENEFIT_PLANS] WHERE BENEFIT_PLANS_ID = @personalid';
+    const result = await request.query(query);
+    return result.recordset;
+};
+
+const getallpayrate = async () => {
+    let [results, fields] = await connection.query('SELECT * FROM `mydb`.`payrates`;')
+    return results
+}
+const getIdpayrate = async (payrate) => {
+    let [results, fields] = await connection.query('SELECT * FROM `mydb`.`payrates` WHERE `idPayRates` = ?;', [payrate])
+    let employee = results && results.length > 0 ? results[0] : {};
+    return employee
+}
 const getIdEmployee = async (employeeid) => {
     let [results, fields] = await connection.query('SELECT * FROM `mydb`.`employee` WHERE `idEmployee` = ?;', [employeeid])
     let employee = results && results.length > 0 ? results[0] : {};
     return employee
 }
+
 //Delete
 const deletebyemployee = async (id) => {
     let [results, fields] = await connection.query(
@@ -494,6 +535,17 @@ const deletebyperson = async (personalid) => {
         throw err;
     }
 };
+
+const get_delete_benefit = async (benefitid) => {
+    const pool = await poolPromise;
+    const request = pool.request();
+    request.input('benefitid', sql.Int, benefitid);
+    const query = 'DELETE FROM [dbo].[BENEFIT_PLANS] WHERE BENEFIT_PLANS_ID = @benefitid';
+    const result = await request.query(query);
+    return result.recordset;
+
+};
+
 //update
 const updateEm = async (idem, emnum, mname, lname, fname, ssn, payrate, idpayrate, vcd, paidtodate, paidlastyear) => {
     const updatedLastName = mname + ' ' + lname;
@@ -504,6 +556,15 @@ const updateEm = async (idem, emnum, mname, lname, fname, ssn, payrate, idpayrat
     )
 }
 
+const update_payrate = async (idPayRates, PayRateName, Value, TaxPercentage, PayType, PayAmount, PT_LevelC) => {
+
+    let [results, fields] = await connection.query(
+        'UPDATE `mydb`.`payrates` SET `PayRateName` = ?, `Value` = ?, `TaxPercentage` = ?, `PayType` = ?, `PayAmount` = ?, `PT_LevelC` = ? WHERE `idPayRates` = ?;',
+        [PayRateName, Value, TaxPercentage, PayType, PayAmount, PT_LevelC, idPayRates],
+        'UPDATE `mydb`.`employee `SET `PayRate` = ? WHERE PayRates_idPayRates = ?;', [PayRateName, idPayRates]
+    )
+
+}
 
 const updatePer = async (idem, lname, fname, mname, birthday, ssn, drivers, adr1, adr2, curcity, curcountry, curzip, curgen, curphone, curmail, curstt, ethnicity, sharestt, benefitid) => {
     try {
@@ -565,17 +626,155 @@ const updatePer = async (idem, lname, fname, mname, birthday, ssn, drivers, adr1
     }
 };
 
+const update_HRM_Em = async (employmentCode, employmentStatus, hireDateForWorking, workersCompCode, terminationDate, rehireDateForWorking, lastReviewDate, numberDaysRequirementOfWorkingPerMonth, personalId) => {
+    try {
+        const pool = await poolPromise;
+        const request = pool.request();
 
+        const query = `
+        UPDATE [dbo].[EMPLOYMENT]
+        SET (
+                [EMPLOYMENT_CODE],
+                [EMPLOYMENT_STATUS],
+                [HIRE_DATE_FOR_WORKING],
+                [WORKERS_COMP_CODE],
+                [TERMINATION_DATE],
+                [REHIRE_DATE_FOR_WORKING],
+                [LAST_REVIEW_DATE],
+                [NUMBER_DAYS_REQUIREMENT_OF_WORKING_PER_MONTH],
+                [PERSONAL_ID]
+            )
+            WHERE
+            PERSONAL_ID = @personalId
+        `;
 
-const get_delete_benefit = async (benefitid) => {
-    const pool = await poolPromise;
-    const request = pool.request();
-    request.input('benefitid', sql.Int, benefitid);
-    const query = 'DELETE FROM [dbo].[BENEFIT_PLANS] WHERE BENEFIT_PLANS_ID = @benefitid';
-    const result = await request.query(query);
-    return result.recordset;
+        const result = await request
+            .input('employmentCode', employmentCode)
+            .input('employmentStatus', employmentStatus)
+            .input('hireDateForWorking', hireDateForWorking)
+            .input('workersCompCode', workersCompCode)
+            .input('terminationDate', terminationDate)
+            .input('rehireDateForWorking', rehireDateForWorking)
+            .input('lastReviewDate', lastReviewDate)
+            .input('numberDaysRequirementOfWorkingPerMonth', numberDaysRequirementOfWorkingPerMonth)
+            .input('personalId', personalId)
+            .query(query);
 
+        return result;
+
+    } catch (error) {
+        console.error('Error creating employee:', error);
+        throw error;
+    }
 };
+
+const update_em_working_time = async (employmentId, yearWorking, monthWorking, numberDaysActualOfWorkingPerMonth, totalNumberVacationWorkingDaysPerMonth) => {
+    try {
+        const pool = await poolPromise;
+        const request = pool.request();
+
+        const query = `
+        UPDATE [dbo].[EMPLOYMENT_WORKING_TIME] SET (
+                [EMPLOYMENT_ID],
+                [YEAR_WORKING],
+                [MONTH_WORKING],
+                [NUMBER_DAYS_ACTUAL_OF_WORKING_PER_MONTH],
+                [TOTAL_NUMBER_VACATION_WORKING_DAYS_PER_MONTH]
+            )
+            WHERE
+            EMPLOYMENT_ID = @employmentId
+        `;
+
+        const result = await request
+            .input('employmentId', employmentId)
+            .input('yearWorking', yearWorking)
+            .input('monthWorking', monthWorking)
+            .input('numberDaysActualOfWorkingPerMonth', numberDaysActualOfWorkingPerMonth)
+            .input('totalNumberVacationWorkingDaysPerMonth', totalNumberVacationWorkingDaysPerMonth)
+            .query(query);
+
+        return result;
+
+    } catch (error) {
+        console.error('Error creating employment working time:', error);
+        throw error;
+    }
+};
+
+const update_JobHistory = async (employmentId, department, division, fromDate, thruDate, jobTitle, supervisor, location, typeOfWork) => {
+    try {
+        const pool = await poolPromise;
+        const request = pool.request();
+
+        const query = `
+        UPDATE [dbo].[JOB_HISTORY]SET (
+                [EMPLOYMENT_ID],
+                [DEPARTMENT],
+                [DIVISION],
+                [FROM_DATE],
+                [THRU_DATE],
+                [JOB_TITLE],
+                [SUPERVISOR],
+                [LOCATION],
+                [TYPE_OF_WORK]
+            )
+            WHERE
+            EMPLOYMENT_ID = @employmentId
+        `;
+
+        const result = await request
+            .input('employmentId', employmentId)
+            .input('department', department)
+            .input('division', division)
+            .input('fromDate', fromDate)
+            .input('thruDate', thruDate)
+            .input('jobTitle', jobTitle)
+            .input('supervisor', supervisor)
+            .input('location', location)
+            .input('typeOfWork', typeOfWork)
+            .query(query);
+
+        return result;
+
+    } catch (error) {
+        console.error('Error creating job history:', error);
+        throw error;
+    }
+};
+
+const update_BenefitPlan = async (benefitid, planName, deductable, percentageCopay) => {
+    try {
+        const pool = await poolPromise;
+        const request = pool.request();
+
+        const query = `
+            UPDATE [dbo].[BENEFIT_PLANS] SET (
+                BENEFIT_PLANS_ID,
+                [PLAN_NAME],
+                [DEDUCTABLE],
+                [PERCENTAGE_COPAY]
+            )
+            WHERE
+            BENEFIT_PLANS_ID = @benefitid
+            
+        `;
+
+        const result = await request
+            .input('benefitid', benefitid)
+            .input('planName', planName)
+            .input('deductable', deductable)
+            .input('percentageCopay', percentageCopay)
+            .query(query);
+
+        return result;
+
+    } catch (error) {
+        console.error('Error creating benefit plan:', error);
+        throw error;
+    }
+};
+
+
 
 
 //dashboard
@@ -616,16 +815,21 @@ module.exports = {
     create_HRM_Em, createparate,
     create_em_working_time, createJobHistory, createBenefitPlan,
     //getID
-    getIdEmployee, getIdpersonal,
+    getIdEmployee, getIdpersonal, getallpayrate, getIdpayrate,
+    getIdemployment, getIdemploymentworking, getIdjobhistory, getIdbenefit,
     // delete
     get_delete_benefit,
     deletebyemployee,
     deletebyperson,
-    //update
-    updateEm, updatePer,
-
-
+    //DASHBOARD
     get_dash_board_department,
-    get_dash_board_department_vacation
+    get_dash_board_department_vacation,
+    //update
+    updateEm, updatePer, update_HRM_Em,
+    update_em_working_time, update_JobHistory,
+    update_BenefitPlan, update_payrate,
+
+
+
 
 }

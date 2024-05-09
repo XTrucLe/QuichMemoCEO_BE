@@ -5,16 +5,21 @@ const express = require('express');
 //     //===========================================================
 //     createpersonal, getbenefit, getemployment, getemployment_working, getjob_history, getpersonal,
 // getidpersonal,} = require('../controlers/homeControler');
-const { gethomepage, see_income, see_vacationday,
+const { gethomepage,
+    see_income, see_vacationday,
     see_avg_shareholder, see_birthday,
     see_efectplan, see_employee_more_vacation,
     //create
     create_render, creates_personal,
     creates_hrm_em, creates_payrate,
     creates_ewt, creates_jh, creates_bnf, create_bf_render,
-    getEmployeeId,
+    //get
+    getEmployeeId, get_payrate, getpayrate,
+    //delete
     delete_benefit, deleteinfo,
-    updatepersonal,
+    //update
+    updatepersonal, updatepayrate,
+    //dashboard
     dash_board_department,
 
 } = require('../controlers/controler')
@@ -23,6 +28,8 @@ const router = express.Router();
 //employee{
 //     router.get('/', gethomecontroler)
 router.get('/home', gethomepage)
+router.get('/payrates', get_payrate)
+
 //     router.get('/create', create)
 //     router.get('/create', create)
 //     router.post('/deleteEmployee/:id', deleteEmployee)
@@ -71,8 +78,10 @@ router.post('/personal/:id', getEmployeeId)
 //xoá là xóa hết toàn bộ thông tin luôn
 router.post('/deleteinfo', deleteinfo)
 //update
-router.post('/update/:id', getEmployeeId)
-router.post('/updateinfo', updatepersonal)
+// router.post('/update/:id', getEmployeeId)
+// router.post('/updateinfo', updatepersonal)
+router.post('/update/:id', getpayrate)
+router.post('/updateinfo', updatepayrate)
 
 
 

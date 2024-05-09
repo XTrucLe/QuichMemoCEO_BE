@@ -14,11 +14,11 @@
         <a href="/payrates">Pay Rates</a>
     </div>
     <div class="form">
-        <form action="/benefit" method="post">
+        <form action="/updateinfo" method="post">
             <fieldset>
                 <legend class="nav_form">Form add user</legend>
                 <div>
-                    <div class="inputgroup">
+                    <!-- <div class="inputgroup">
                         <label for="benefitid">BENEFIT_PLAN_ID:</label>
                         <input type="number" id="benefitid" name="benefitid"><br><br>
                     </div>
@@ -33,9 +33,38 @@
                     <div class="inputgroup">
                         <label for="percentageCopay">first name:</label>
                         <input type="number" id="percentageCopay" name="percentageCopay"><br><br>
+                    </div> -->
+                    <div class="inputgroup">
+                        <label for="idPayRates">idPayRates</label>
+                        <input type="number" id="idPayRates" name="idPayRates"
+                            value="<%= personal.idPayRates %>"><br><br>
                     </div>
-
-
+                    <div class="inputgroup">
+                        <label for="PayRateName">PayRateName:</label>
+                        <input type="text" id="PayRateName" name="PayRateName"
+                            value="<%= personal.PayRateName %>"><br><br>
+                    </div>
+                    <div class="inputgroup">
+                        <label for="Value">Value</label>
+                        <input type="number" id="Value" name="Value" value="<%= personal.Value %>"><br><br>
+                    </div>
+                    <div class="inputgroup">
+                        <label for="TaxPercentage">TaxPercentage</label>
+                        <input type="number" id="TaxPercentage" name="TaxPercentage"
+                            value="<%= personal.TaxPercentage %>"><br><br>
+                    </div>
+                    <div class="inputgroup">
+                        <label for="PayType">PayType</label>
+                        <input type="number" id="PayType" name="PayType" value="<%= personal.PayType %>"><br><br>
+                    </div>
+                    <div class="inputgroup">
+                        <label for="PayAmount">PayAmount</label>
+                        <input type="number" id="PayAmount" name="PayAmount" value="<%= personal.PayAmount %>"><br><br>
+                    </div>
+                    <div class="inputgroup">
+                        <label for="PT_LevelC">PT_LevelC</label>
+                        <input type="number" id="PT_LevelC" name="PT_LevelC" value="<%= personal.PT_LevelC %>"><br><br>
+                    </div>
                     <div>
                         <button>SAVE</button>
                     </div>

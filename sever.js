@@ -3,6 +3,7 @@ const express = require('express')
 const ConfigViewEngine = require('./src/config/viewengine')
 const webroute = require('./src/routes/api')
 const path = require('path');
+const cors = require('cors');
 const router = require('./src/routes/api');
 const app = express();
 
@@ -13,7 +14,7 @@ const hostname = process.env.hostname;
 // khai báo 
 // app.set('views ', path.join(__dirname, './src/views'));
 
-
+app.use(cors());
 ConfigViewEngine(app);
 // app.use(express.static(path.join(__dirname, "./src/"))); 
 

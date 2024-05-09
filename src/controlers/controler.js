@@ -6,7 +6,8 @@ const { getEmployeeDataFromMySql, getEmployeeDataFromSqlServer,
     create_em_working_time, createJobHistory, createBenefitPlan,
     getallpersonal,
     //get
-    getIdpersonal, getIdEmployee,
+    getIdpersonal, getIdEmployee, getallpayrate, getIdpayrate,
+    getIdemployment, getIdemploymentworking, getIdjobhistory, getIdbenefit,
     //delete
     get_delete_benefit,
     deletebyemployee, deletebyperson,
@@ -14,7 +15,9 @@ const { getEmployeeDataFromMySql, getEmployeeDataFromSqlServer,
     get_dash_board_department,
     get_dash_board_department_vacation,
     //update
-    updateEm, updatePer,
+    updateEm, updatePer, update_HRM_Em,
+    update_em_working_time, update_JobHistory,
+    update_BenefitPlan, update_payrate,
 } = require('../services/service');
 const { getallbenefit } = require('../services/svc_sqlsever')
 
@@ -225,6 +228,20 @@ const gethomepage = async (req, res) => {
     let results = await getallpersonal();
     return res.render('home_personal.ejs', { personal: results })
 }
+
+
+const get_payrate = async (req, res) => {
+    try {
+        let results = await getallpayrate();
+        return res.render('payrates.ejs', { List_payrate: results });
+        // return res.json({ ListEmployee: results });
+
+    } catch (error) {
+        // Handle error
+        return res.status(500).json({ error: 'dit me may di ngu' });
+    }
+};
+
 // Delete
 
 
@@ -234,7 +251,14 @@ const deleteinfo = async (req, res) => {
     await deletebyperson(id);
     return res.render('home_personal.ejs');
 };
-//
+
+const delete_benefit = async (req, res) => {
+    const benefit = req.params.id;
+    let bnf = await getallbenefit(benefit);
+    res.render('delete.ejs', { employee_update: bnf })
+
+}
+//update
 
 const updatepersonal = async (req, res) => {
     const {
@@ -247,17 +271,52 @@ const updatepersonal = async (req, res) => {
     await updateEm(idem, emnum, lname, mname, fname, ssn, payrate, idpayrate, vcd, paidtodate, paidlastyear)
     let personal = await getIdpersonal();
     let eployee = await getIdEmployee()
-    return res.render('home_personal.ejs', { personal, eployee });
+    return res.send('ok baby oiiiiiii.ejs');
 };
 
 
-
-const delete_benefit = async (req, res) => {
-    const benefit = req.params.id;
-    let bnf = await getallbenefit(benefit);
-    res.render('delete.ejs', { employee_update: bnf })
-
+const getpayrate = async (req, res) => {
+    const payrate = req.params.id;
+    let eployee = await getIdpayrate(payrate)
+    res.render('create.ejs', { personal: eployee });
 }
+const updatepayrate = async (req, res) => {
+    const { idPayRates, PayRateName, Value, TaxPercentage, PayType, PayAmount, PT_LevelC
+
+    } = req.body;
+    await update_payrate(idPayRates, PayRateName, Value, TaxPercentage, PayType, PayAmount, PT_LevelC);
+    return res.send('ok baby oiiiiiii.ejs');
+};
+
+const update_employment = async (req, res) => {
+    const { employmentCode, employmentStatus, hireDateForWorking, workersCompCode,
+        terminationDate, rehireDateForWorking, lastReviewDate, numberDaysRequirementOfWorkingPerMonth, personalId
+    } = req.body;
+    await update_HRM_Em(employmentCode, employmentStatus, hireDateForWorking, workersCompCode,
+        terminationDate, rehireDateForWorking, lastReviewDate, numberDaysRequirementOfWorkingPerMonth, personalId);
+    return res.send('ok baby oiiiiiii.ejs');
+};
+
+const updateJobHistory = async (req, res) => {
+    const { employmentId, department, division, fromDate, thruDate, jobTitle, supervisor, location, typeOfWork
+    } = req.body;
+    await update_JobHistory(employmentId, department, division, fromDate, thruDate, jobTitle, supervisor, location, typeOfWork);
+    return res.send('ok baby oiiiiiii.ejs');
+};
+const update_employment_working = async (req, res) => {
+    const { employmentId, yearWorking, monthWorking, numberDaysActualOfWorkingPerMonth, totalNumberVacationWorkingDaysPerMonth
+    } = req.body;
+    await update_em_working_time(employmentId, yearWorking, monthWorking, numberDaysActualOfWorkingPerMonth, totalNumberVacationWorkingDaysPerMonth);
+    return res.send('ok baby oiiiiiii.ejs');
+};
+const update_benefit = async (req, res) => {
+    const { benefitid, planName, deductable, percentageCopay
+    } = req.body;
+    await update_BenefitPlan(benefitid, planName, deductable, percentageCopay);
+    return res.send('ok baby oiiiiiii.ejs');
+};
+
+
 //dashboard
 const dash_board_department = async (req, res) => {
     const dash_board_department = await get_dash_board_department();
@@ -275,12 +334,16 @@ module.exports = {
     //create
     create_render, creates_personal, creates_hrm_em,
     creates_ewt, creates_jh, creates_bnf,
-    create_bf_render,
-    getEmployeeId,
+    create_bf_render, creates_payrate,
+    //get
+    getEmployeeId, get_payrate, getpayrate,
     //delete
     delete_benefit, deleteinfo,
-    dash_board_department, creates_payrate,
+    //dashboard
+    dash_board_department,
     //update
-    updatepersonal,
+    updatepersonal, updatepayrate, update_employment,
+    updateJobHistory, update_employment_working,
+    update_benefit,
 
 };
