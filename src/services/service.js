@@ -203,10 +203,19 @@ WHERE
     }
 }
 //create
-const create_mydb_Em = async (idem, emnum, lname, fname, ssn, payrate, idpayrate, vcd, paidtodate, paidlastyear) => {
+const create_mydb_Em = async (idem, emnum, lname, mname, fname, ssn, payrate, idpayrate, vcd, paidtodate, paidlastyear) => {
+    const updatedLastName = mname + ' ' + lname;
     let [results, fields] = await connection.query(
         'INSERT INTO `mydb`.`employee` (`idEmployee`, `EmployeeNumber`, `LastName`, `FirstName`, `SSN`, `PayRate`, `PayRates_idPayRates`, `VacationDays`, `PaidToDate`, `PaidLastYear`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [idem, emnum, lname, fname, ssn, payrate, idpayrate, vcd, paidtodate, paidlastyear],
+        [idem, emnum, updatedLastName, fname, ssn, payrate, idpayrate, vcd, paidtodate, paidlastyear],
+
+    );
+}
+
+const createparate = async (idPayRates, PayRateName, Value, TaxPercentage, PayType, PayAmount, PT_LevelC) => {
+    let [results, fields] = await connection.query(
+        'INSERT INTO `mydb`.`payrates`  (`idPayRates`, `PayRateName`, `Value`, `TaxPercentage`, `PayType`, `PayAmount`,`PT_LevelC` ) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        [idPayRates, PayRateName, Value, TaxPercentage, PayType, PayAmount, PT_LevelC],
 
     );
 }
@@ -433,22 +442,7 @@ const createBenefitPlan = async (benefitid, planName, deductable, percentageCopa
     }
 };
 
-//Delete
-// const deletebypecrson = async (id) => {
-//     let [results, fields] = await connection.query(
-//         'DELETE FROM `mydb`.`employee`WHERE `idEmployee` = ?;',
-//         [id]
-//     )
-// }
-// const deletebyperson = async (personalid) => {
-//     const pool = await poolPromise;
-//     const request = pool.request();
-//     request.input('personalid', sql.Int, personalid);
-//     const query = 'DELETE FROM [dbo].[PERSONAL] WHERE PERSONAL_ID = @personalId';
-//     const result = await request.query(query);
-//     return result.recordset;
 
-// };
 //getid
 const getallpersonal = async () => {
     const pool = await poolPromise;
@@ -466,6 +460,124 @@ const getIdpersonal = async (personalid) => {
     const result = await request.query(query);
     return result.recordset;
 };
+const getIdEmployee = async (employeeid) => {
+    let [results, fields] = await connection.query('SELECT * FROM `mydb`.`employee` WHERE `idEmployee` = ?;', [employeeid])
+    let employee = results && results.length > 0 ? results[0] : {};
+    return employee
+}
+//Delete
+const deletebyemployee = async (id) => {
+    let [results, fields] = await connection.query(
+        'DELETE FROM `mydb`.`employee`WHERE `idEmployee` = ?;',
+        [id]
+    )
+}
+
+const deletebyperson = async (personalid) => {
+    const pool = await poolPromise;
+    const request = pool.request();
+    request.input('personalid', sql.Int, personalid);
+
+    // Construct the query with placeholders and execute it
+    const query = `
+        DELETE FROM EMPLOYMENT_WORKING_TIME WHERE EMPLOYMENT_ID IN (SELECT EMPLOYMENT_ID FROM EMPLOYMENT WHERE PERSONAL_ID = @personalid);
+        DELETE FROM JOB_HISTORY WHERE EMPLOYMENT_ID IN (SELECT EMPLOYMENT_ID FROM EMPLOYMENT WHERE PERSONAL_ID = @personalid);
+        DELETE FROM EMPLOYMENT WHERE PERSONAL_ID = @personalid;
+        DELETE FROM PERSONAL WHERE PERSONAL_ID = @personalid;
+    `;
+
+    try {
+        const result = await request.query(query);
+        return result.recordset;
+    } catch (err) {
+        console.error('Error executing delete query:', err);
+        throw err;
+    }
+};
+//update
+const updateEm = async (idem, emnum, mname, lname, fname, ssn, payrate, idpayrate, vcd, paidtodate, paidlastyear) => {
+    const updatedLastName = mname + ' ' + lname;
+
+    let [results, fields] = await connection.query(
+        'UPDATE `mydb`.`employee` SET `EmployeeNumber` = ?, `LastName` = ?, `FirstName` = ?, `SSN` = ?, `PayRate` = ?, `PayRates_idPayRates` = ?, `VacationDays` = ?, `PaidToDate` = ?, `PaidLastYear` = ? WHERE `idEmployee` = ?;',
+        [emnum, updatedLastName, fname, ssn, payrate, idpayrate, vcd, paidtodate, paidlastyear, idem]
+    )
+}
+
+
+const updatePer = async (idem, lname, fname, mname, birthday, ssn, drivers, adr1, adr2, curcity, curcountry, curzip, curgen, curphone, curmail, curstt, ethnicity, sharestt, benefitid) => {
+    try {
+        const pool = await poolPromise;
+        const request = pool.request();
+
+        const query = `
+            UPDATE [dbo].[PERSONAL]
+            SET
+                CURRENT_FIRST_NAME = @fname,
+                CURRENT_LAST_NAME = @lname,
+                CURRENT_MIDDLE_NAME = @mname,
+                BIRTH_DATE = @birthday,
+                SOCIAL_SECURITY_NUMBER = @ssn,
+                DRIVERS_LICENSE = @drivers,
+                CURRENT_ADDRESS_1 = @adr1,
+                CURRENT_ADDRESS_2 = @adr2,
+                CURRENT_CITY = @curcity,
+                CURRENT_COUNTRY = @curcountry,
+                CURRENT_ZIP = @curzip,
+                CURRENT_GENDER = @curgen,
+                CURRENT_PHONE_NUMBER = @curphone,
+                CURRENT_PERSONAL_EMAIL = @curmail,
+                CURRENT_MARITAL_STATUS = @curstt,
+                ETHNICITY = @ethnicity,
+                SHAREHOLDER_STATUS = @sharestt,
+                BENEFIT_PLAN_ID = @benefitid
+            WHERE
+                PERSONAL_ID = @idem
+        `;
+
+        const result = await request
+            .input('idem', idem)
+            .input('fname', sql.NVarChar(255), fname)
+            .input('lname', sql.NVarChar(255), lname)
+            .input('mname', sql.NVarChar(255), mname)
+            .input('birthday', sql.NVarChar(255), birthday)
+            .input('ssn', sql.NVarChar(255), ssn)
+            .input('drivers', sql.NVarChar(255), drivers)
+            .input('adr1', sql.NVarChar(255), adr1)
+            .input('adr2', sql.NVarChar(255), adr2)
+            .input('curcity', sql.NVarChar(255), curcity)
+            .input('curcountry', sql.NVarChar(255), curcountry)
+            .input('curzip', sql.Int, curzip)
+            .input('curgen', sql.NVarChar(255), curgen)
+            .input('curphone', sql.NVarChar(255), curphone)
+            .input('curmail', sql.NVarChar(255), curmail)
+            .input('curstt', sql.NVarChar(255), curstt)
+            .input('ethnicity', sql.NVarChar(255), ethnicity)
+            .input('sharestt', sql.NVarChar(255), sharestt)
+            .input('benefitid', sql.NVarChar(255), benefitid)
+            .query(query);
+
+        return result;
+
+    } catch (error) {
+        console.error('Error updating employee:', error);
+        throw error;
+    }
+};
+
+
+
+const get_delete_benefit = async (benefitid) => {
+    const pool = await poolPromise;
+    const request = pool.request();
+    request.input('benefitid', sql.Int, benefitid);
+    const query = 'DELETE FROM [dbo].[BENEFIT_PLANS] WHERE BENEFIT_PLANS_ID = @benefitid';
+    const result = await request.query(query);
+    return result.recordset;
+
+};
+
+
 //dashboard
 const get_dash_board_department = async (personalid) => {
     const pool = await poolPromise;
@@ -499,15 +611,21 @@ module.exports = {
     getall_birthday, getall_planefect,
     getEmployeeDataFromSqlServer, getall_shareholder,
     getall_employee_more_vacation,
-    create_mydb_Em, createPer, getallpersonal, getIdpersonal,
-    get_dash_board_department, create_HRM_Em,
+    //create
+    create_mydb_Em, createPer, getallpersonal,
+    create_HRM_Em, createparate,
     create_em_working_time, createJobHistory, createBenefitPlan,
-    // deletebyperson,
+    //getID
+    getIdEmployee, getIdpersonal,
+    // delete
+    get_delete_benefit,
+    deletebyemployee,
+    deletebyperson,
+    //update
+    updateEm, updatePer,
 
 
-
-
-
+    get_dash_board_department,
     get_dash_board_department_vacation
 
 }

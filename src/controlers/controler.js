@@ -1,11 +1,22 @@
 const { getEmployeeDataFromMySql, getEmployeeDataFromSqlServer,
     getall_shareholder, getall_birthday, getall_planefect,
-    getall_employee_more_vacation, create_mydb_Em, createPer, create_HRM_Em,
+    getall_employee_more_vacation,
+    //create
+    create_mydb_Em, createPer, create_HRM_Em, createparate,
     create_em_working_time, createJobHistory, createBenefitPlan,
-    getallpersonal, getIdpersonal,
+    getallpersonal,
+    //get
+    getIdpersonal, getIdEmployee,
+    //delete
+    get_delete_benefit,
+    deletebyemployee, deletebyperson,
+    //dashboard
     get_dash_board_department,
-    get_dash_board_department_vacation
+    get_dash_board_department_vacation,
+    //update
+    updateEm, updatePer,
 } = require('../services/service');
+const { getallbenefit } = require('../services/svc_sqlsever')
 
 
 
@@ -127,7 +138,20 @@ const creates_personal = async (req, res) => {
         } = req.body;
         await createPer(idem, lname, fname, mname, birthday, ssn, drivers, adr1, adr2, curcity, curcountry, curzip,
             curgen, curphone, curmail, curstt, ethnicity, sharestt, benefitid);
-        await create_mydb_Em(idem, emnum, lname, fname, ssn, payrate, idpayrate, vcd, paidtodate, paidlastyear)
+        await create_mydb_Em(idem, emnum, mname, lname, fname, ssn, payrate, idpayrate, vcd, paidtodate, paidlastyear)
+        res.send('Employee created successfully.');
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).send('An error occurred while creating the employee.');
+    }
+};
+
+const creates_payrate = async (req, res) => {
+    try {
+        const {
+            idPayRates, PayRateName, Value, TaxPercentage, PayType, PayAmount, PT_LevelC
+        } = req.body;
+        await createparate(idPayRates, PayRateName, Value, TaxPercentage, PayType, PayAmount, PT_LevelC)
         res.send('Employee created successfully.');
     } catch (error) {
         console.error('Error:', error);
@@ -188,34 +212,51 @@ const creates_bnf = async (req, res) => {
         res.status(500).send('An error occurred while creating the employee.');
     }
 };
-// // Delete
-// const deletepersonal = async (req, res) => {
-//     const employeeid = req.params.id;
-//     let employee = await getIdEmployee(employeeid);
-//     res.render('delete.ejs', { employee_delete: employee })
-
-// }
-
-// const deleteinfo = async (req, res) => {
-//     const id = req.body.idem;
-//     await deleteEm(id);
-//     // res.redirect('/home')
-//     let results = await getallusers();
-//     return res.json({ employee_delete: results });
-//     //=> xóa đưa ra chuỗi 
-// };
-
 
 //getid
+const getEmployeeId = async (req, res) => {
+    const personalid = req.params.id;
+    let personal = await getIdpersonal(personalid);
+    let eployee = await getIdEmployee(personalid)
+    res.render('edit.ejs', { personal, eployee });
+}
+
 const gethomepage = async (req, res) => {
     let results = await getallpersonal();
     return res.render('home_personal.ejs', { personal: results })
 }
+// Delete
 
-const getEmployeeId = async (req, res) => {
-    const personalid = req.params.id;
-    let personal = await getIdpersonal(personalid);
-    res.render('edit.ejs', { employee_update: personal });
+
+const deleteinfo = async (req, res) => {
+    const id = req.body.idem;
+    await deletebyemployee(id);
+    await deletebyperson(id);
+    return res.render('home_personal.ejs');
+};
+//
+
+const updatepersonal = async (req, res) => {
+    const {
+        idem, lname, fname, mname, birthday, ssn, drivers, adr1, adr2,
+        curcity, curcountry, curzip, curgen, curphone, curmail, curstt,
+        ethnicity, sharestt, benefitid, emnum, payrate, idpayrate, vcd, paidtodate, paidlastyear
+    } = req.body;
+    await updatePer(idem, lname, fname, mname, birthday, ssn, drivers, adr1, adr2, curcity, curcountry, curzip,
+        curgen, curphone, curmail, curstt, ethnicity, sharestt, benefitid);
+    await updateEm(idem, emnum, lname, mname, fname, ssn, payrate, idpayrate, vcd, paidtodate, paidlastyear)
+    let personal = await getIdpersonal();
+    let eployee = await getIdEmployee()
+    return res.render('home_personal.ejs', { personal, eployee });
+};
+
+
+
+const delete_benefit = async (req, res) => {
+    const benefit = req.params.id;
+    let bnf = await getallbenefit(benefit);
+    res.render('delete.ejs', { employee_update: bnf })
+
 }
 //dashboard
 const dash_board_department = async (req, res) => {
@@ -231,8 +272,15 @@ module.exports = {
     see_income, see_vacationday,
     see_avg_shareholder, see_birthday, see_efectplan,
     see_employee_more_vacation,
+    //create
     create_render, creates_personal, creates_hrm_em,
     creates_ewt, creates_jh, creates_bnf,
-    getEmployeeId, create_bf_render,
-    dash_board_department
+    create_bf_render,
+    getEmployeeId,
+    //delete
+    delete_benefit, deleteinfo,
+    dash_board_department, creates_payrate,
+    //update
+    updatepersonal,
+
 };

@@ -5,14 +5,17 @@ const express = require('express');
 //     //===========================================================
 //     createpersonal, getbenefit, getemployment, getemployment_working, getjob_history, getpersonal,
 // getidpersonal,} = require('../controlers/homeControler');
-const { see_income, see_vacationday,
+const { gethomepage, see_income, see_vacationday,
     see_avg_shareholder, see_birthday,
     see_efectplan, see_employee_more_vacation,
-    create_render, creates_personal, gethomepage,
-    creates_hrm_em,
-    creates_ewt, creates_jh, creates_bnf,
+    //create
+    create_render, creates_personal,
+    creates_hrm_em, creates_payrate,
+    creates_ewt, creates_jh, creates_bnf, create_bf_render,
     getEmployeeId,
-    dash_board_department, create_bf_render,
+    delete_benefit, deleteinfo,
+    updatepersonal,
+    dash_board_department,
 
 } = require('../controlers/controler')
 const router = express.Router();
@@ -54,17 +57,23 @@ router.get('/birthday', see_birthday)
 router.get('/efectplan', see_efectplan)
 router.get('/more_vacation', see_employee_more_vacation)
 //CROD
-
-router.get('/create', create_render)
+//create
+router.get('/create', create_render)//không quan tâm
 router.post('/creates_personal', creates_personal)
+router.post('/creates_payrate', creates_payrate)
 router.post('/employent', creates_hrm_em)
 router.post('/employent_working_time', creates_ewt)
 router.post('/job_history', creates_jh)
 router.get('/createbenefit', create_bf_render)
 router.post('/benefit', creates_bnf)
-
-
+//delete
 router.post('/personal/:id', getEmployeeId)
+//xoá là xóa hết toàn bộ thông tin luôn
+router.post('/deleteinfo', deleteinfo)
+//update
+router.post('/update/:id', getEmployeeId)
+router.post('/updateinfo', updatepersonal)
+
 
 
 //DASHBOARD

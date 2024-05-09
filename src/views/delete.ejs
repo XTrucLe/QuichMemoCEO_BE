@@ -17,24 +17,30 @@
     <div class="form">
         <form action="/deleteinfo" method="post">
             <fieldset>
-                <legend class="nav_form">Do you want to Delete Employee</legend>
+                <legend class="nav_form">Do you want to Delete Benefitplan</legend>
                 <div>
-                    <div class="inputgroup none">
-                        <label for="idem">ID employee:</label>
-                        <input type="number" id="idem" name="idem" value="<%= employee_delete.idEmployee%>"><br><br>
-                    </div>
                     <div class="inputgroup">
-                        <label for="emnum">Employee Number:</label>
-                        <input type="number" id="emnum" name="emnum"
-                            value="<%= employee_delete.EmployeeNumber%>"><br><br>
+                        <label for="benefitid">BENEFIT_PLAN_ID:</label>
+                        <input type="number" id="benefitid" name="benefitid"
+                            value="<%= employee_update[0].BENEFIT_PLAN_ID %>"><br><br>
                     </div>
+
                     <div class="inputgroup">
-                        <label for="lname">Last name:</label>
-                        <input type="text" id="lname" name="lname" value="<%= employee_delete.LastName%>"><br><br>
+                        <label for="planName">PLAN_NAME:</label>
+                        <input type="text" id="planName" name="planName"
+                            value="<%= employee_update[0].PLAN_NAME %>"><br><br>
                     </div>
+
                     <div class="inputgroup">
-                        <label for="fname">first name:</label>
-                        <input type="text" id="fname" name="fname" value="<%= employee_delete.FirstName%>"><br><br>
+                        <label for="deductable">DEDUCTABLE:</label>
+                        <input type="number" id="deductable" name="deductable"
+                            value="<%= employee_update[0].DEDUCTABLE %>"><br><br>
+                    </div>
+
+                    <div class="inputgroup">
+                        <label for="percentageCopay">PERCENTAGE_COPAY:</label>
+                        <input type="number" id="percentageCopay" name="percentageCopay"
+                            value="<%= employee_update[0].PERCENTAGE_COPAY %>"><br><br>
                     </div>
 
 
