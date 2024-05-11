@@ -30,29 +30,20 @@
         <% List_payrate.forEach(function(payrates){ %>
             <tr>
                 <td>
-                    <%= payrates['idPayRates'] %>
+                    <%= payrates['BENEFIT_PLANS_ID'] %>
                 </td>
                 <td>
-                    <%= payrates['PayRateName'] %>
+                    <%= payrates['PLAN_NAME'] %>
                 </td>
                 <td>
-                    <%= payrates.Value %>
+                    <%= payrates.DEDUCTABLE %>
                 </td>
                 <td>
-                    <%= payrates['TaxPercentage'] %>
-                </td>
-                <td>
-                    <%= payrates['PayType'] %>
-                </td>
-                <td>
-                    <%= payrates['PayAmount'] %>
-                </td>
-                <td>
-                    <%= payrates['PT_LevelC'] %>
+                    <%= payrates['PERCENTAGE_COPAY'] %>
                 </td>
 
                 <td>
-                    <form action="/update_payrate/<%= payrates['idPayRates'] %>" method="post">
+                    <form action="/update_benefit/<%= payrates['BENEFIT_PLANS_ID'] %>" method="post">
                         <button>update</button>
                     </form>
                     <!-- <button>update</button> -->

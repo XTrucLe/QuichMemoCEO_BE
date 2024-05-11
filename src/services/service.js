@@ -202,6 +202,43 @@ WHERE
         throw error;
     }
 }
+
+const getall_employee_in_hiringday = async () => {
+    try {
+        const pool = await poolPromise;
+        const result = await pool.request().query(`
+        SELECT 
+    p.CURRENT_FIRST_NAME + ' ' + p.CURRENT_LAST_NAME AS EmployeeName,
+    j.DEPARTMENT AS Department,
+    DATEADD(year, DATEDIFF(year, e.HIRE_DATE_FOR_WORKING, GETDATE()), e.HIRE_DATE_FOR_WORKING) AS AnniversaryDate
+FROM 
+    dbo.[EMPLOYMENT] e,
+    dbo.[PERSONAL] p,
+    dbo.[JOB_HISTORY] j
+WHERE 
+    e.PERSONAL_ID = p.PERSONAL_ID 
+    AND e.EMPLOYMENT_ID = j.EMPLOYMENT_ID
+    AND 
+    (
+        -- On their anniversary today
+        (MONTH(e.HIRE_DATE_FOR_WORKING) = MONTH(GETDATE()) AND DAY(e.HIRE_DATE_FOR_WORKING) = DAY(GETDATE()))
+        OR
+        -- About to have their anniversary in the next 5 days
+        (
+            DATEDIFF(day, GETDATE(), DATEADD(year, DATEDIFF(year, e.HIRE_DATE_FOR_WORKING, GETDATE()), e.HIRE_DATE_FOR_WORKING)) >= 0
+            AND DATEDIFF(day, GETDATE(), DATEADD(year, DATEDIFF(year, e.HIRE_DATE_FOR_WORKING, GETDATE()), e.HIRE_DATE_FOR_WORKING)) <= 5
+        )
+    )
+
+        `);
+
+        return result.recordset;
+    } catch (error) {
+        console.error('Error fetching data from SQL Server:', error);
+        throw error;
+    }
+}
+
 //create
 const create_mydb_Em = async (idem, emnum, lname, mname, fname, ssn, payrate, idpayrate, vcd, paidtodate, paidlastyear) => {
     const updatedLastName = mname + ' ' + lname;
@@ -482,11 +519,11 @@ const getIdjobhistory = async (personalid) => {
     return result.recordset;
 };
 //xem lại
-const getIdbenefit = async (personalid) => {
+const getIdbenefit = async (benefit) => {
     const pool = await poolPromise;
     const request = pool.request();
-    request.input('personalid', sql.Int, personalid);
-    const query = 'SELECT * FROM [dbo].[BENEFIT_PLANS] WHERE BENEFIT_PLANS_ID = @personalid';
+    request.input('benefitid', sql.Int, benefit);
+    const query = 'SELECT * FROM [dbo].[BENEFIT_PLANS] WHERE BENEFIT_PLANS_ID = @benefitid';
     const result = await request.query(query);
     return result.recordset;
 };
@@ -543,8 +580,8 @@ const get_delete_benefit = async (benefitid) => {
     const query = 'DELETE FROM [dbo].[BENEFIT_PLANS] WHERE BENEFIT_PLANS_ID = @benefitid';
     const result = await request.query(query);
     return result.recordset;
-
 };
+
 
 //update
 const updateEm = async (idem, emnum, mname, lname, fname, ssn, payrate, idpayrate, vcd, paidtodate, paidlastyear) => {
@@ -625,25 +662,22 @@ const updatePer = async (idem, lname, fname, mname, birthday, ssn, drivers, adr1
         throw error;
     }
 };
-
+//
 const update_HRM_Em = async (employmentCode, employmentStatus, hireDateForWorking, workersCompCode, terminationDate, rehireDateForWorking, lastReviewDate, numberDaysRequirementOfWorkingPerMonth, personalId) => {
     try {
         const pool = await poolPromise;
         const request = pool.request();
 
         const query = `
-        UPDATE [dbo].[EMPLOYMENT]
-        SET (
-                [EMPLOYMENT_CODE],
-                [EMPLOYMENT_STATUS],
-                [HIRE_DATE_FOR_WORKING],
-                [WORKERS_COMP_CODE],
-                [TERMINATION_DATE],
-                [REHIRE_DATE_FOR_WORKING],
-                [LAST_REVIEW_DATE],
-                [NUMBER_DAYS_REQUIREMENT_OF_WORKING_PER_MONTH],
-                [PERSONAL_ID]
-            )
+            UPDATE [dbo].[EMPLOYMENT] SET 
+                [EMPLOYMENT_CODE] = @employmentCode,
+                [EMPLOYMENT_STATUS] = @employmentStatus,
+                [HIRE_DATE_FOR_WORKING] = @hireDateForWorking,
+                [WORKERS_COMP_CODE] = @workersCompCode,
+                [TERMINATION_DATE] = @terminationDate,
+                [REHIRE_DATE_FOR_WORKING] = @rehireDateForWorking,
+                [LAST_REVIEW_DATE] = @lastReviewDate,
+                [NUMBER_DAYS_REQUIREMENT_OF_WORKING_PER_MONTH] = @numberDaysRequirementOfWorkingPerMonth
             WHERE
             PERSONAL_ID = @personalId
         `;
@@ -663,7 +697,7 @@ const update_HRM_Em = async (employmentCode, employmentStatus, hireDateForWorkin
         return result;
 
     } catch (error) {
-        console.error('Error creating employee:', error);
+        console.error('Error updating employment:', error);
         throw error;
     }
 };
@@ -674,13 +708,11 @@ const update_em_working_time = async (employmentId, yearWorking, monthWorking, n
         const request = pool.request();
 
         const query = `
-        UPDATE [dbo].[EMPLOYMENT_WORKING_TIME] SET (
-                [EMPLOYMENT_ID],
-                [YEAR_WORKING],
-                [MONTH_WORKING],
-                [NUMBER_DAYS_ACTUAL_OF_WORKING_PER_MONTH],
-                [TOTAL_NUMBER_VACATION_WORKING_DAYS_PER_MONTH]
-            )
+            UPDATE [dbo].[EMPLOYMENT_WORKING_TIME] SET 
+                [YEAR_WORKING] = @yearWorking,
+                [MONTH_WORKING] = @monthWorking,
+                [NUMBER_DAYS_ACTUAL_OF_WORKING_PER_MONTH] = @numberDaysActualOfWorkingPerMonth,
+                [TOTAL_NUMBER_VACATION_WORKING_DAYS_PER_MONTH] = @totalNumberVacationWorkingDaysPerMonth
             WHERE
             EMPLOYMENT_ID = @employmentId
         `;
@@ -696,7 +728,7 @@ const update_em_working_time = async (employmentId, yearWorking, monthWorking, n
         return result;
 
     } catch (error) {
-        console.error('Error creating employment working time:', error);
+        console.error('Error updating employment working time:', error);
         throw error;
     }
 };
@@ -707,17 +739,15 @@ const update_JobHistory = async (employmentId, department, division, fromDate, t
         const request = pool.request();
 
         const query = `
-        UPDATE [dbo].[JOB_HISTORY]SET (
-                [EMPLOYMENT_ID],
-                [DEPARTMENT],
-                [DIVISION],
-                [FROM_DATE],
-                [THRU_DATE],
-                [JOB_TITLE],
-                [SUPERVISOR],
-                [LOCATION],
-                [TYPE_OF_WORK]
-            )
+            UPDATE [dbo].[JOB_HISTORY] SET 
+                [DEPARTMENT] = @department,
+                [DIVISION] = @division,
+                [FROM_DATE] = @fromDate,
+                [THRU_DATE] = @thruDate,
+                [JOB_TITLE] = @jobTitle,
+                [SUPERVISOR] = @supervisor,
+                [LOCATION] = @location,
+                [TYPE_OF_WORK] = @typeOfWork
             WHERE
             EMPLOYMENT_ID = @employmentId
         `;
@@ -737,7 +767,7 @@ const update_JobHistory = async (employmentId, department, division, fromDate, t
         return result;
 
     } catch (error) {
-        console.error('Error creating job history:', error);
+        console.error('Error updating job history:', error);
         throw error;
     }
 };
@@ -748,12 +778,10 @@ const update_BenefitPlan = async (benefitid, planName, deductable, percentageCop
         const request = pool.request();
 
         const query = `
-            UPDATE [dbo].[BENEFIT_PLANS] SET (
-                BENEFIT_PLANS_ID,
-                [PLAN_NAME],
-                [DEDUCTABLE],
-                [PERCENTAGE_COPAY]
-            )
+            UPDATE [HRM].[dbo].[BENEFIT_PLANS] SET 
+                [PLAN_NAME]= @planName,
+                [DEDUCTABLE]=@deductable,
+                [PERCENTAGE_COPAY]=@percentageCopay
             WHERE
             BENEFIT_PLANS_ID = @benefitid
             
@@ -809,7 +837,7 @@ module.exports = {
     getEmployeeDataFromMySql,
     getall_birthday, getall_planefect,
     getEmployeeDataFromSqlServer, getall_shareholder,
-    getall_employee_more_vacation,
+    getall_employee_more_vacation, getall_employee_in_hiringday,
     //create
     create_mydb_Em, createPer, getallpersonal,
     create_HRM_Em, createparate,

@@ -1,6 +1,6 @@
 const { getEmployeeDataFromMySql, getEmployeeDataFromSqlServer,
     getall_shareholder, getall_birthday, getall_planefect,
-    getall_employee_more_vacation,
+    getall_employee_more_vacation, getall_employee_in_hiringday,
     //create
     create_mydb_Em, createPer, create_HRM_Em, createparate,
     create_em_working_time, createJobHistory, createBenefitPlan,
@@ -108,6 +108,11 @@ const see_avg_shareholder = async (req, res) => {
 
 const see_birthday = async (req, res) => {
     const data = await getall_birthday();
+    return res.json({ data });
+};
+
+const see_employee_in_hiringday = async (req, res) => {
+    const data = await getall_employee_in_hiringday();
     return res.json({ data });
 };
 
@@ -229,7 +234,6 @@ const gethomepage = async (req, res) => {
     return res.render('home_personal.ejs', { personal: results })
 }
 
-
 const get_payrate = async (req, res) => {
     try {
         let results = await getallpayrate();
@@ -241,6 +245,16 @@ const get_payrate = async (req, res) => {
         return res.status(500).json({ error: 'dit me may di ngu' });
     }
 };
+
+const getbenefit = async (req, res) => {
+    const data = await getallbenefit();
+    return res.render('benefit.ejs', { List_payrate: data });
+};
+const getbenefitId = async (req, res) => {
+    const benefit = req.params.id;
+    let eployee = await getIdbenefit(benefit)
+    res.render('editbenefit.ejs', { employee_update: eployee });
+}
 
 // Delete
 
@@ -273,8 +287,6 @@ const updatepersonal = async (req, res) => {
     let eployee = await getIdEmployee()
     return res.send('ok baby oiiiiiii.ejs');
 };
-
-
 const getpayrate = async (req, res) => {
     const payrate = req.params.id;
     let eployee = await getIdpayrate(payrate)
@@ -287,7 +299,6 @@ const updatepayrate = async (req, res) => {
     await update_payrate(idPayRates, PayRateName, Value, TaxPercentage, PayType, PayAmount, PT_LevelC);
     return res.send('ok baby oiiiiiii.ejs');
 };
-
 const update_employment = async (req, res) => {
     const { employmentCode, employmentStatus, hireDateForWorking, workersCompCode,
         terminationDate, rehireDateForWorking, lastReviewDate, numberDaysRequirementOfWorkingPerMonth, personalId
@@ -296,7 +307,6 @@ const update_employment = async (req, res) => {
         terminationDate, rehireDateForWorking, lastReviewDate, numberDaysRequirementOfWorkingPerMonth, personalId);
     return res.send('ok baby oiiiiiii.ejs');
 };
-
 const updateJobHistory = async (req, res) => {
     const { employmentId, department, division, fromDate, thruDate, jobTitle, supervisor, location, typeOfWork
     } = req.body;
@@ -309,6 +319,8 @@ const update_employment_working = async (req, res) => {
     await update_em_working_time(employmentId, yearWorking, monthWorking, numberDaysActualOfWorkingPerMonth, totalNumberVacationWorkingDaysPerMonth);
     return res.send('ok baby oiiiiiii.ejs');
 };
+
+
 const update_benefit = async (req, res) => {
     const { benefitid, planName, deductable, percentageCopay
     } = req.body;
@@ -320,8 +332,12 @@ const update_benefit = async (req, res) => {
 //dashboard
 const dash_board_department = async (req, res) => {
     const dash_board_department = await get_dash_board_department();
+    return res.json({ dash_board_department });
+
+}
+const dash_board_department_vacation = async (req, res) => {
     const dash_board_department_vacation = await get_dash_board_department_vacation();
-    return res.json({ dash_board_department, dash_board_department_vacation });
+    return res.json({ dash_board_department_vacation });
 
 }
 
@@ -330,17 +346,18 @@ module.exports = {
     gethomepage,
     see_income, see_vacationday,
     see_avg_shareholder, see_birthday, see_efectplan,
-    see_employee_more_vacation,
+    see_employee_more_vacation, see_employee_in_hiringday,
     //create
     create_render, creates_personal, creates_hrm_em,
     creates_ewt, creates_jh, creates_bnf,
     create_bf_render, creates_payrate,
     //get
-    getEmployeeId, get_payrate, getpayrate,
+    getEmployeeId, get_payrate, getpayrate, getbenefit,
+    getbenefitId,
     //delete
     delete_benefit, deleteinfo,
     //dashboard
-    dash_board_department,
+    dash_board_department, dash_board_department_vacation,
     //update
     updatepersonal, updatepayrate, update_employment,
     updateJobHistory, update_employment_working,

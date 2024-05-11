@@ -100,67 +100,69 @@
                     <!-- <form action="/update/<%= personal[0].PERSONAL_ID %>" method="post">
                         <button>update</button>
                     </form> -->
-                    <button>update</button>
+                    <button class="update">update</button>
                 </td>
             </tr>
+            <div id="myModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <div class="options">
+                        <form action="/update_personal/<%= Em.PERSONAL_ID %>" method="post">
+                            <button>Personal</button>
+                        </form>
+                        <form action="/update/<%= Em.PERSONAL_ID %>" method="post">
+                            <button>Employment</button>
+                        </form>
+                        <form action="/update/<%= Em.PERSONAL_ID %>" method="post">
+                            <button>Employment Working</button>
+                        </form>
+                        <form action="/update/<%= Em.PERSONAL_ID %>" method="post">
+                            <button>Job History</button>
+                        </form>
+                        <form action="/payrates" method="get">
+                            <button type="submit">Payrate</button>
+                        </form>
+                        <form action="/benefitinfo" method="get">
+                            <button type="submit">Benefit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
 
+            <script>
+                // Get the modal
+                var modal = document.getElementById("myModal");
+
+                // Get all buttons with class "update"
+                var buttons = document.querySelectorAll("button.update");
+
+                // Get the <span> element that closes the modal
+                var span = document.getElementsByClassName("close")[0];
+
+                // When any "update" button is clicked, open the modal 
+                buttons.forEach(function (button) {
+                    button.onclick = function () {
+                        modal.style.display = "block";
+                    }
+                });
+
+                // When the user clicks on <span> (x), close the modal
+                span.onclick = function () {
+                    modal.style.display = "none";
+                }
+
+                // When the user clicks anywhere outside of the modal, close it
+                window.onclick = function (event) {
+                    if (event.target == modal) {
+                        modal.style.display = "none";
+                    }
+                }
+            </script>
             <%});%>
 
 
     </table>
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <div class="options">
-                <form action="/update/<%= personal[0].PERSONAL_ID %>" method="post">
-                    <button>Personal</button>
-                </form>
-                <form action="/update/<%= personal[0].PERSONAL_ID %>" method="post">
-                    <button>Employment</button>
-                </form>
-                <form action="/update/<%= personal[0].PERSONAL_ID %>" method="post">
-                    <button>Employment Working</button>
-                </form>
-                <form action="/update/<%= personal[0].PERSONAL_ID %>" method="post">
-                    <button>Job History</button>
-                </form>
 
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Get the modal
-        var modal = document.getElementById("myModal");
-
-        // Get the button that opens the modal
-        var btn = document.querySelector("button");
-
-        // Get the <span> element that closes the modal
-        var span = document.getElementsByClassName("close")[0];
-
-        // When the user clicks the button, open the modal 
-        btn.onclick = function () {
-            modal.style.display = "block";
-        }
-
-        // When the user clicks on <span> (x), close the modal
-        span.onclick = function () {
-            modal.style.display = "none";
-        }
-
-        // When the user clicks anywhere outside of the modal, close it
-        window.onclick = function (event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
-        }
-
-        // Function to redirect to update page based on option chosen
-        function redirectToUpdate(option) {
-            window.location.href = "/update/" + option;
-        }
-    </script>
 
 </body>
 
