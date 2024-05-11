@@ -61,29 +61,29 @@ router.post('/benefit', creates_bnf)
 //delete
 router.post('/personal/:id', getEmployeeId)
 //xoá là xóa hết toàn bộ thông tin luôn
-router.post('/deleteinfo', deleteinfo)
+router.delete('/deleteinfo', deleteinfo)
 //update
 router.post('/update_personal/:id', getEmployeeId)//
-router.post('/update_personal', updatepersonal)
+router.put('/update_personal', updatepersonal)
 
 router.post('/update_employment/:id', get_employmentid)//
-router.post('/update_employment', update_employment)
+router.put('/update_employment', update_employment)
 
 router.post('/update_JobHistory/:id', get_JobHistoryid)//
-router.post('/update_JobHistory', updateJobHistory)
+router.put('/update_JobHistory', updateJobHistory)
 
 router.post('/update_employment_working_time/:id', get_employment_workingid)//
-router.post('/update_employment_working_time', update_employment_working)
+router.put('/update_employment_working_time', update_employment_working)
 //
 router.get('/benefitinfo', get_benefit)
 router.post('/update_benefit/:id', get_benefitId)
-router.post('/update_benefit', update_benefit)
+router.put('/update_benefit', update_benefit)
 
 //
 //
 router.get('/payrates', get_payrate)
 router.post('/update_payrate/:id', getpayrateid)// sổ thông tin theo id
-router.post('/update_payrate', updatepayrate)//update
+router.put('/update_payrate', updatepayrate)//update
 //
 
 //DASHBOARD
