@@ -97,7 +97,7 @@ const getjob_history = async (req, res) => {
 };
 const getpersonal = async (req, res) => {
     const data = await getallpersonal();
-    return res.render('home_personal.ejs', { personal: data });
+    return res.json({ data });
 };
 
 // create 

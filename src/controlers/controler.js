@@ -4,9 +4,9 @@ const { getEmployeeDataFromMySql, getEmployeeDataFromSqlServer,
     //create
     create_mydb_Em, createPer, create_HRM_Em, createparate,
     create_em_working_time, createJobHistory, createBenefitPlan,
-    getallpersonal,
+
     //get
-    getIdpersonal, getIdEmployee, getallpayrate, getIdpayrate,
+    getIdpersonal, getIdEmployee, getIdpayrate,
     getIdemployment, getIdemploymentworking, getIdjobhistory, getIdbenefit,
     //delete
     get_delete_benefit,
@@ -19,9 +19,11 @@ const { getEmployeeDataFromMySql, getEmployeeDataFromSqlServer,
     update_em_working_time, update_JobHistory,
     update_BenefitPlan, update_payrate,
 } = require('../services/service');
-const { getallbenefit } = require('../services/svc_sqlsever')
+const { getallbenefit, getallemployment, getallemployment_working,
+    getalljob_history, getallpersonal,
+} = require('../services/svc_sqlsever')
 
-
+const { getallusers, getallpayrate } = require('../services/svc_mysql')
 
 
 const see_income = async (req, res) => {
@@ -220,6 +222,35 @@ const creates_bnf = async (req, res) => {
         res.status(500).send('An error occurred while creating the employee.');
     }
 };
+//get all table
+const get_benefit = async (req, res) => {
+    const data = await getallbenefit();
+    return res.json({ data });
+};
+const get_employment = async (req, res) => {
+    const data = await getallemployment();
+    return res.json({ data });
+};
+const get_employment_working = async (req, res) => {
+    const data = await getallemployment_working();
+    return res.json({ data });
+};
+const get_job_history = async (req, res) => {
+    const data = await getalljob_history();
+    return res.json({ data });
+};
+const get_personal = async (req, res) => {
+    const data = await getallpersonal();
+    return res.json({ data });
+};
+const get_employee = async (req, res) => {
+    let results = await getallusers();
+    return res.json({ ListEmployee: results })
+}
+const get_payrate = async (req, res) => {
+    let results = await getallpayrate();
+    return res.json({ Listpayrates: results })
+}
 
 //getid
 const getEmployeeId = async (req, res) => {
@@ -234,25 +265,27 @@ const gethomepage = async (req, res) => {
     return res.render('home_personal.ejs', { personal: results })
 }
 
-const get_payrate = async (req, res) => {
-    try {
-        let results = await getallpayrate();
-        return res.render('payrates.ejs', { List_payrate: results });
-        // return res.json({ ListEmployee: results });
-
-    } catch (error) {
-        // Handle error
-        return res.status(500).json({ error: 'dit me may di ngu' });
-    }
-};
-
-const getbenefit = async (req, res) => {
-    const data = await getallbenefit();
-    return res.render('benefit.ejs', { List_payrate: data });
-};
-const getbenefitId = async (req, res) => {
+const get_benefitId = async (req, res) => {
     const benefit = req.params.id;
     let eployee = await getIdbenefit(benefit)
+    res.render('editbenefit.ejs', { employee_update: eployee });
+}
+
+const get_employmentid = async (req, res) => {
+    const benefit = req.params.id;
+    let eployee = await getIdemployment(benefit)
+    res.render('editbenefit.ejs', { employee_update: eployee });
+}
+
+const get_employment_workingid = async (req, res) => {
+    const benefit = req.params.id;
+    let eployee = await getIdemploymentworking(benefit)
+    res.render('editbenefit.ejs', { employee_update: eployee });
+}
+
+const get_JobHistoryid = async (req, res) => {
+    const benefit = req.params.id;
+    let eployee = await getIdjobhistory(benefit)
     res.render('editbenefit.ejs', { employee_update: eployee });
 }
 
@@ -287,7 +320,7 @@ const updatepersonal = async (req, res) => {
     let eployee = await getIdEmployee()
     return res.send('ok baby oiiiiiii.ejs');
 };
-const getpayrate = async (req, res) => {
+const getpayrateid = async (req, res) => {
     const payrate = req.params.id;
     let eployee = await getIdpayrate(payrate)
     res.render('create.ejs', { personal: eployee });
@@ -351,9 +384,13 @@ module.exports = {
     create_render, creates_personal, creates_hrm_em,
     creates_ewt, creates_jh, creates_bnf,
     create_bf_render, creates_payrate,
+    //getall
+    get_payrate, get_employment, get_benefit, get_employment_working,
+    get_job_history, get_personal, get_employee,
     //get
-    getEmployeeId, get_payrate, getpayrate, getbenefit,
-    getbenefitId,
+    getEmployeeId, getpayrateid, get_JobHistoryid,
+    get_benefitId, get_employmentid, get_employment_workingid,
+
     //delete
     delete_benefit, deleteinfo,
     //dashboard

@@ -3,7 +3,10 @@ const getallusers = async () => {
     let [results, fields] = await connection.query('SELECT * FROM `mydb`.`employee`;')
     return results
 }
-
+const getallpayrate = async () => {
+    let [results, fields] = await connection.query('SELECT * FROM `mydb`.`payrates`;')
+    return results
+}
 // const getupdate = async (employeeid) truyền vào id 
 const getIdEmployee = async (employeeid) => {
     let [results, fields] = await connection.query('SELECT * FROM `mydb`.`employee` WHERE `idEmployee` = ?;', [employeeid])
@@ -44,5 +47,5 @@ const getall_payrate = async () => {
 module.exports = {
     getallusers, getIdEmployee, createEm, updateEm, deleteEm,
     //------------------------------
-    getall_payrate,
+    getallpayrate,
 }
