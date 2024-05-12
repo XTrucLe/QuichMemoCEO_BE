@@ -223,6 +223,46 @@ const creates_bnf = async (req, res) => {
     }
 };
 //get all table
+const get_HRM = async (req, res) => {
+    const data = await getEmployeeDataFromSqlServer();
+    return res.json({ data });
+};
+const get_mydb = async (req, res) => {
+    const data = await getEmployeeDataFromMySql();
+    return res.json({ data });
+};
+const get_All = async (req, res) => {
+    try {
+        const mysqlData = await getEmployeeDataFromMySql();
+        const sqlServerData = await getEmployeeDataFromSqlServer();
+
+        // Combine data from both databases
+        let combinedData = [];
+
+        // MySQL Data
+        mysqlData.forEach(mysqlRow => {
+            // Find matching SQL Server row based on PERSONAL_ID
+            const matchingSqlServerRow = sqlServerData.find(sqlServerRow => sqlServerRow.PERSONAL_ID_PERSONAL === mysqlRow.idEmployee);
+
+            // Prepare combined object
+            const combinedObject = {
+                // Include all fields from MySQL data
+                ...mysqlRow,
+                // Include all fields from SQL Server data (if available)
+                ...(matchingSqlServerRow || {})
+            };
+
+            combinedData.push(combinedObject);
+        });
+
+        // Send the combined data as JSON
+        res.json(combinedData);
+    } catch (error) {
+        console.error('Error fetching combined employee data:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
 const get_benefit = async (req, res) => {
     const data = await getallbenefit();
     return res.json({ data });
@@ -390,7 +430,7 @@ module.exports = {
     //get
     getEmployeeId, getpayrateid, get_JobHistoryid,
     get_benefitId, get_employmentid, get_employment_workingid,
-
+    get_HRM, get_mydb, get_All,
     //delete
     delete_benefit, deleteinfo,
     //dashboard

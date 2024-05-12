@@ -14,7 +14,7 @@ const { gethomepage,
     //get
     getEmployeeId, getpayrateid,
     get_benefitId, get_employmentid, get_employment_workingid,
-    get_JobHistoryid,
+    get_JobHistoryid, get_HRM, get_mydb, get_All,
     //delete
     delete_benefit, deleteinfo,
     //update
@@ -33,6 +33,12 @@ router.get('/job_history', get_job_history)
 router.get('/payrate', get_payrate)
 router.get('/benefit', get_benefit)
 router.get('/employee', get_employee)
+router.get('/HRM', get_HRM)
+router.get('/mydb', get_mydb)
+router.get('/All', get_All)
+
+
+
 
 
 
