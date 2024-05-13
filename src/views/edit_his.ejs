@@ -1,0 +1,68 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Employee</title>
+    <link rel="stylesheet" href="../public/css/home.css">
+</head>
+
+<body>
+    <div class="topnav">
+        <a href="/home">Home</a>
+        <a href="/create">Create Employee</a>
+        <a href="/payrates">Pay Rates</a>
+    </div>
+    <div class="form">
+        <form action="/update_personal" method="post">
+            <fieldset>
+                <legend class="nav_form">Do you want to delete Employee</legend>
+                <div class="inputgroup">
+                    <label for="idem">JOB_HISTORY_ID:</label>
+                    <input type="text" id="idem" name="idem" value="<%= personal[0].JOB_HISTORY_ID %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="fname">EMPLOYMENT_ID:</label>
+                    <input type="text" id="fname" name="fname" value="<%= personal[0].EMPLOYMENT_ID %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="lname">DEPARTMENT:</label>
+                    <input type="text" id="lname" name="lname" value="<%= personal[0].DEPARTMENT %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="mname">DIVISION:</label>
+                    <input type="text" id="mname" name="mname" value="<%= personal[0].DIVISION %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="birthday">FROM_DATE:</label>
+                    <input type="date" id="birthday" name="birthday" value="<%= personal[0].FROM_DATE %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="ssn">THRU_DATE:</label>
+                    <input type="date" id="ssn" name="ssn" value="<%= personal[0].THRU_DATE %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="drivers">JOB_TITLE:</label>
+                    <input type="text" id="drivers" name="drivers" value="<%= personal[0].JOB_TITLE %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="adr1">SUPERVISOR:</label>
+                    <input type="text" id="adr1" name="adr1" value="<%= personal[0].SUPERVISOR %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="adr2">LOCATION:</label>
+                    <input type="text" id="adr2" name="adr2" value="<%= personal[0].LOCATION %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="curcity">TYPE_OF_WORK:</label>
+                    <input type="text" id="curcity" name="curcity" value="<%= personal[0].TYPE_OF_WORK %>"><br><br>
+                </div>
+                <div>
+                    <button>Update</button>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</body>
+
+</html>

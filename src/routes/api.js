@@ -18,8 +18,7 @@ const { gethomepage,
     //delete
     delete_benefit, deleteinfo,
     //update
-    updatepersonal, updatepayrate, update_employment,
-    updateJobHistory, update_employment_working, update_benefit,
+    update, updatepayrate, update_benefit,
     //dashboard
     dash_board_department, dash_board_department_vacation,
 
@@ -69,17 +68,11 @@ router.post('/personal/:id', getEmployeeId)
 //xoá là xóa hết toàn bộ thông tin luôn
 router.delete('/deleteinfo', deleteinfo)
 //update
-router.post('/update_personal/:id', getEmployeeId)//
-router.put('/update_personal', updatepersonal)
+update
+router.post('/updateAll/:id', getEmployeeId)//
+router.put('/updateAll', update)
 
-router.post('/update_employment/:id', get_employmentid)//
-router.put('/update_employment', update_employment)
 
-router.post('/update_JobHistory/:id', get_JobHistoryid)//
-router.put('/update_JobHistory', updateJobHistory)
-
-router.post('/update_employment_working_time/:id', get_employment_workingid)//
-router.put('/update_employment_working_time', update_employment_working)
 //
 router.get('/benefitinfo', get_benefit)
 router.post('/update_benefit/:id', get_benefitId)
@@ -94,7 +87,6 @@ router.put('/update_payrate', updatepayrate)//update
 
 //DASHBOARD
 router.get('/dashboard_department', dash_board_department)
-router.get('/dashboard_department_vacation', dash_board_department_vacation)
 
 
 

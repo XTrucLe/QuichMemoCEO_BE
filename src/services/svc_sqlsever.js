@@ -37,6 +37,7 @@ const getallpersonal = async () => {
     return result.recordset;
 };
 
+
 const getIdpersonal = async (personalid) => {
     const pool = await poolPromise;
     const request = pool.request();

@@ -14,116 +14,246 @@
         <a href="/payrates">Pay Rates</a>
     </div>
     <div class="form">
-        <form action="/update_personal" method="post">
+        <form action="/updateAll" method="post">
             <fieldset>
                 <legend class="nav_form">do u want delete Employee</legend>
                 <div class="inputgroup">
-                    <label for="idem">PERSONAL ID:</label>
-                    <input type="text" id="idem" name="idem" value="<%= personal[0].PERSONAL_ID %>"><br><br>
+                    <label for="PERSONAL_ID">PERSONAL ID:</label>
+                    <input type="text" id="PERSONAL_ID" name="PERSONAL_ID"
+                        value="<%= personal[0].PERSONAL_ID %>"><br><br>
                 </div>
                 <div class="inputgroup">
-                    <label for="fname">First Name:</label>
-                    <input type="text" id="fname" name="fname" value="<%= personal[0].CURRENT_FIRST_NAME %>"><br><br>
+                    <label for="CURRENT_FIRST_NAME">First Name:</label>
+                    <input type="text" id="CURRENT_FIRST_NAME" name="CURRENT_FIRST_NAME"
+                        value="<%= personal[0].CURRENT_FIRST_NAME %>"><br><br>
                 </div>
                 <div class="inputgroup">
-                    <label for="lname">Last Name:</label>
-                    <input type="text" id="lname" name="lname" value="<%= personal[0].CURRENT_LAST_NAME %>"><br><br>
+                    <label for="CURRENT_LAST_NAME">Last Name:</label>
+                    <input type="text" id="CURRENT_LAST_NAME" name="CURRENT_LAST_NAME"
+                        value="<%= personal[0].CURRENT_LAST_NAME %>"><br><br>
                 </div>
                 <div class="inputgroup">
-                    <label for="mname">Middle Name:</label>
-                    <input type="text" id="mname" name="mname" value="<%= personal[0].CURRENT_MIDDLE_NAME %>"><br><br>
+                    <label for="CURRENT_MIDDLE_NAME">Middle Name:</label>
+                    <input type="text" id="CURRENT_MIDDLE_NAME" name="CURRENT_MIDDLE_NAME"
+                        value="<%= personal[0].CURRENT_MIDDLE_NAME %>"><br><br>
                 </div>
                 <div class="inputgroup">
-                    <label for="birthday">Birth Date:</label>
-                    <input type="date" id="birthday" name="birthday" value="<%= personal[0].BIRTH_DATE %>"><br><br>
+                    <label for="BIRTH_DATE">Birth Date:</label>
+                    <input type="date" id="BIRTH_DATE" name="BIRTH_DATE" value="<%= personal[0].BIRTH_DATE %>"><br><br>
                 </div>
                 <div class="inputgroup">
-                    <label for="ssn">Social Security Number:</label>
-                    <input type="text" id="ssn" name="ssn" value="<%= personal[0].SOCIAL_SECURITY_NUMBER %>"><br><br>
+                    <label for="SOCIAL_SECURITY_NUMBER">Social Security Number:</label>
+                    <input type="text" id="SOCIAL_SECURITY_NUMBER" name="SOCIAL_SECURITY_NUMBER"
+                        value="<%= personal[0].SOCIAL_SECURITY_NUMBER %>"><br><br>
                 </div>
                 <div class="inputgroup">
-                    <label for="drivers">Driver's License:</label>
-                    <input type="text" id="drivers" name="drivers" value="<%= personal[0].DRIVERS_LICENSE %>"><br><br>
+                    <label for="DRIVERS_LICENSE">Driver's License:</label>
+                    <input type="text" id="DRIVERS_LICENSE" name="DRIVERS_LICENSE"
+                        value="<%= personal[0].DRIVERS_LICENSE %>"><br><br>
                 </div>
                 <div class="inputgroup">
-                    <label for="adr1">Address 1:</label>
-                    <input type="text" id="adr1" name="adr1" value="<%= personal[0].CURRENT_ADDRESS_1 %>"><br><br>
+                    <label for="CURRENT_ADDRESS_1">Address 1:</label>
+                    <input type="text" id="CURRENT_ADDRESS_1" name="CURRENT_ADDRESS_1"
+                        value="<%= personal[0].CURRENT_ADDRESS_1 %>"><br><br>
                 </div>
                 <div class="inputgroup">
-                    <label for="adr2">Address 2:</label>
-                    <input type="text" id="adr2" name="adr2" value="<%= personal[0].CURRENT_ADDRESS_2 %>"><br><br>
+                    <label for="CURRENT_ADDRESS_2">Address 2:</label>
+                    <input type="text" id="CURRENT_ADDRESS_2" name="CURRENT_ADDRESS_2"
+                        value="<%= personal[0].CURRENT_ADDRESS_2 %>"><br><br>
                 </div>
                 <div class="inputgroup">
-                    <label for="curcity">City:</label>
-                    <input type="text" id="curcity" name="curcity" value="<%= personal[0].CURRENT_CITY %>"><br><br>
+                    <label for="CURRENT_CITY">City:</label>
+                    <input type="text" id="CURRENT_CITY" name="CURRENT_CITY"
+                        value="<%= personal[0].CURRENT_CITY %>"><br><br>
                 </div>
                 <div class="inputgroup">
-                    <label for="curcountry">Country:</label>
-                    <input type="text" id="curcountry" name="curcountry"
+                    <label for="CURRENT_COUNTRY">Country:</label>
+                    <input type="text" id="CURRENT_COUNTRY" name="CURRENT_COUNTRY"
                         value="<%= personal[0].CURRENT_COUNTRY %>"><br><br>
                 </div>
                 <div class="inputgroup">
-                    <label for="curzip">ZIP:</label>
-                    <input type="text" id="curzip" name="curzip" value="<%= personal[0].CURRENT_ZIP %>"><br><br>
+                    <label for="CURRENT_ZIP">ZIP:</label>
+                    <input type="text" id="CURRENT_ZIP" name="CURRENT_ZIP"
+                        value="<%= personal[0].CURRENT_ZIP %>"><br><br>
                 </div>
                 <div class="inputgroup">
-                    <label for="curgen">Gender:</label>
-                    <input type="text" id="curgen" name="curgen" value="<%= personal[0].CURRENT_GENDER %>"><br><br>
+                    <label for="CURRENT_GENDER">Gender:</label>
+                    <input type="text" id="CURRENT_GENDER" name="CURRENT_GENDER"
+                        value="<%= personal[0].CURRENT_GENDER %>"><br><br>
                 </div>
                 <div class="inputgroup">
-                    <label for="curphone">Phone Number:</label>
-                    <input type="text" id="curphone" name="curphone"
+                    <label for="CURRENT_PHONE_NUMBER">Phone Number:</label>
+                    <input type="text" id="CURRENT_PHONE_NUMBER" name="CURRENT_PHONE_NUMBER"
                         value="<%= personal[0].CURRENT_PHONE_NUMBER %>"><br><br>
                 </div>
                 <div class="inputgroup">
-                    <label for="curmail">Personal Email:</label>
-                    <input type="email" id="curmail" name="curmail"
+                    <label for="CURRENT_PERSONAL_EMAIL">Personal Email:</label>
+                    <input type="email" id="CURRENT_PERSONAL_EMAIL" name="CURRENT_PERSONAL_EMAIL"
                         value="<%= personal[0].CURRENT_PERSONAL_EMAIL %>"><br><br>
                 </div>
                 <div class="inputgroup">
-                    <label for="curstt">Marital Status:</label>
-                    <input type="text" id="curstt" name="curstt"
+                    <label for="CURRENT_MARITAL_STATUS">Marital Status:</label>
+                    <input type="text" id="CURRENT_MARITAL_STATUS" name="CURRENT_MARITAL_STATUS"
                         value="<%= personal[0].CURRENT_MARITAL_STATUS %>"><br><br>
                 </div>
                 <div class="inputgroup">
-                    <label for="ethnicity">Ethnicity:</label>
-                    <input type="text" id="ethnicity" name="ethnicity" value="<%= personal[0].ETHNICITY %>"><br><br>
+                    <label for="ETHNICITY">Ethnicity:</label>
+                    <input type="text" id="ETHNICITY" name="ETHNICITY" value="<%= personal[0].ETHNICITY %>"><br><br>
                 </div>
                 <div class="inputgroup">
-                    <label for="sharestt">Shareholder Status:</label>
-                    <input type="text" id="sharestt" name="sharestt"
+                    <label for="SHAREHOLDER_STATUS">Shareholder Status:</label>
+                    <input type="text" id="SHAREHOLDER_STATUS" name="SHAREHOLDER_STATUS"
                         value="<%= personal[0].SHAREHOLDER_STATUS %>"><br><br>
                 </div>
                 <div class="inputgroup">
-                    <label for="benefitid">Benefit Plan ID:</label>
-                    <input type="text" id="benefitid" name="benefitid"
+                    <label for="BENEFIT_PLAN_ID">Benefit Plan ID:</label>
+                    <input type="text" id="BENEFIT_PLAN_ID" name="BENEFIT_PLAN_ID"
                         value="<%= personal[0].BENEFIT_PLAN_ID %>"><br><br>
                 </div>
                 <div class="inputgroup">
-                    <label for="emnum">Employee Number:</label>
-                    <input type="number" id="emnum" name="emnum" value="<%= eployee.EmployeeNumber %>">><br><br>
+                    <label for="EmployeeNumber">Employee Number:</label>
+                    <input type="number" id="EmployeeNumber" name="EmployeeNumber"
+                        value="<%= employee.EmployeeNumber %>">><br><br>
                 </div>
                 <div class="inputgroup">
-                    <label for="payrate">Pay Rates</label>
-                    <input type="text" id="payrate" name="payrate" value="<%= eployee.PayRate %>"><br><br>
+                    <label for="PayRate">Pay Rates</label>
+                    <input type="text" id="PayRate" name="PayRate" value="<%= employee.PayRate %>"><br><br>
                 </div>
                 <div class="inputgroup">
-                    <label for="idpayrate">Pay Rates_idPay Rates:</label>
-                    <input type="number" id="idpayrate" name="idpayrate"
-                        value="<%= eployee.PayRates_idPayRates %>">><br><br>
+                    <label for="PayRates_idPayRates">Pay Rates_idPay Rates:</label>
+                    <input type="number" id="PayRates_idPayRates" name="PayRates_idPayRates"
+                        value="<%= employee.PayRates_idPayRates %>">><br><br>
                 </div>
                 <div class="inputgroup">
-                    <label for="vcd">Vacation Days:</label>
-                    <input type="number" id="vcd" name="vcd" value="<%= eployee.VacationDays %>">><br><br>
+                    <label for="VacationDays">Vacation Days:</label>
+                    <input type="number" id="VacationDays" name="VacationDays"
+                        value="<%= employee.VacationDays %>">><br><br>
                 </div>
                 <div class="inputgroup">
-                    <label for="paidtodate">Paid To Date:</label>
-                    <input type="number" id="paidtodate" name="paidtodate" value="<%= eployee.PaidToDate %>">><br><br>
+                    <label for="PaidToDate">Paid To Date:</label>
+                    <input type="number" id="PaidToDate" name="PaidToDate" value="<%= employee.PaidToDate %>">><br><br>
                 </div>
                 <div class="inputgroup">
-                    <label for="paidlastyear">Paid Last Year:</label>
-                    <input type="number" id="paidlastyear" name="paidlastyear"
-                        value="<%= eployee.PaidLastYear %>">><br><br>
+                    <label for="PaidLastYear">Paid Last Year:</label>
+                    <input type="number" id="PaidLastYear" name="PaidLastYear"
+                        value="<%= employee.PaidLastYear %>">><br><br>
+                </div>
+                <label for="">EMPLOYMENT</label>
+                <div class="inputgroup">
+                    <label for="EMPLOYMENT_ID">EMPLOYMENT_ID:</label>
+                    <input type="text" id="EMPLOYMENT_ID" name="EMPLOYMENT_ID"
+                        value="<%= personal[0].EMPLOYMENT_ID %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="EMPLOYMENT_CODE">EMPLOYMENT_CODE:</label>
+                    <input type="text" id="EMPLOYMENT_CODE" name="EMPLOYMENT_CODE"
+                        value="<%= personal[0].EMPLOYMENT_CODE %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="EMPLOYMENT_STATUS">EMPLOYMENT_STATUS:</label>
+                    <input type="text" id="EMPLOYMENT_STATUS" name="EMPLOYMENT_STATUS"
+                        value="<%= personal[0].EMPLOYMENT_STATUS %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="HIRE_DATE_FOR_WORKING">HIRE_DATE_FOR_WORKING:</label>
+                    <input type="date" id="HIRE_DATE_FOR_WORKING" name="HIRE_DATE_FOR_WORKING"
+                        value="<%= personal[0].HIRE_DATE_FOR_WORKING %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="WORKERS_COMP_CODE">WORKERS_COMP_CODE:</label>
+                    <input type="text" id="WORKERS_COMP_CODE" name="WORKERS_COMP_CODE"
+                        value="<%= personal[0].WORKERS_COMP_CODE %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="TERMINATION_DATE">TERMINATION_DATE:</label>
+                    <input type="date" id="TERMINATION_DATE" name="TERMINATION_DATE"
+                        value="<%= personal[0].TERMINATION_DATE %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="REHIRE_DATE_FOR_WORKING">REHIRE_DATE_FOR_WORKING:</label>
+                    <input type="date" id="REHIRE_DATE_FOR_WORKING" name="REHIRE_DATE_FOR_WORKING"
+                        value="<%= personal[0].REHIRE_DATE_FOR_WORKING %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="LAST_REVIEW_DATE">LAST_REVIEW_DATE:</label>
+                    <input type="date" id="LAST_REVIEW_DATE" name="LAST_REVIEW_DATE"
+                        value="<%= personal[0].LAST_REVIEW_DATE %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label
+                        for="NUMBER_DAYS_REQUIREMENT_OF_WORKING_PER_MONTH">NUMBER_DAYS_REQUIREMENT_OF_WORKING_PER_MONTH:</label>
+                    <input type="text" id="NUMBER_DAYS_REQUIREMENT_OF_WORKING_PER_MONTH"
+                        name="NUMBER_DAYS_REQUIREMENT_OF_WORKING_PER_MONTH"
+                        value="<%= personal[0].NUMBER_DAYS_REQUIREMENT_OF_WORKING_PER_MONTH %>"><br><br>
+                </div>
+                <label for="">employment working day</label>
+                <div class="inputgroup">
+                    <label for="EMPLOYMENT_WORKING_TIME_ID">EMPLOYMENT_WORKING_TIME_ID:</label>
+                    <input type="text" id="EMPLOYMENT_WORKING_TIME_ID" name="EMPLOYMENT_WORKING_TIME_ID"
+                        value="<%= personal[0].EMPLOYMENT_WORKING_TIME_ID %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="YEAR_WORKING">YEAR_WORKING:</label>
+                    <input type="date" id="YEAR_WORKING" name="YEAR_WORKING"
+                        value="<%= personal[0].YEAR_WORKING %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="MONTH_WORKING">MONTH_WORKING:</label>
+                    <input type="text" id="MONTH_WORKING" name="MONTH_WORKING"
+                        value="<%= personal[0].MONTH_WORKING %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label
+                        for="NUMBER_DAYS_ACTUAL_OF_WORKING_PER_MONTH">NUMBER_DAYS_ACTUAL_OF_WORKING_PER_MONTH:</label>
+                    <input type="text" id="NUMBER_DAYS_ACTUAL_OF_WORKING_PER_MONTH"
+                        name="NUMBER_DAYS_ACTUAL_OF_WORKING_PER_MONTH"
+                        value="<%= personal[0].NUMBER_DAYS_ACTUAL_OF_WORKING_PER_MONTH %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label
+                        for="TOTAL_NUMBER_VACATION_WORKING_DAYS_PER_MONTH">TOTAL_NUMBER_VACATION_WORKING_DAYS_PER_MONTH:</label>
+                    <input type="text" id="TOTAL_NUMBER_VACATION_WORKING_DAYS_PER_MONTH"
+                        name="TOTAL_NUMBER_VACATION_WORKING_DAYS_PER_MONTH"
+                        value="<%= personal[0].TOTAL_NUMBER_VACATION_WORKING_DAYS_PER_MONTH %>"><br><br>
+                </div>
+
+                <div class="inputgroup">
+                    <label for="JOB_HISTORY_ID">JOB_HISTORY_ID:</label>
+                    <input type="text" id="JOB_HISTORY_ID" name="JOB_HISTORY_ID"
+                        value="<%= personal[0].JOB_HISTORY_ID %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="DEPARTMENT">DEPARTMENT:</label>
+                    <input type="text" id="DEPARTMENT" name="DEPARTMENT" value="<%= personal[0].DEPARTMENT %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="DIVISION">DIVISION:</label>
+                    <input type="text" id="DIVISION" name="DIVISION" value="<%= personal[0].DIVISION %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="FROM_DATE">FROM_DATE:</label>
+                    <input type="text" id="FROM_DATE" name="FROM_DATE" value="<%= personal[0].FROM_DATE %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="THRU_DATE">THRU_DATE:</label>
+                    <input type="text" id="THRU_DATE" name="THRU_DATE" value="<%= personal[0].THRU_DATE %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="JOB_TITLE">JOB_TITLE:</label>
+                    <input type="text" id="JOB_TITLE" name="JOB_TITLE" value="<%= personal[0].JOB_TITLE %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="SUPERVISOR">SUPERVISOR:</label>
+                    <input type="text" id="SUPERVISOR" name="SUPERVISOR" value="<%= personal[0].SUPERVISOR %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="LOCATION">LOCATION:</label>
+                    <input type="text" id="LOCATION" name="LOCATION" value="<%= personal[0].LOCATION %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="TYPE_OF_WORK">TYPE_OF_WORK:</label>
+                    <input type="text" id="TYPE_OF_WORK" name="TYPE_OF_WORK"
+                        value="<%= personal[0].TYPE_OF_WORK %>"><br><br>
                 </div>
                 <div>
                     <button>Update</button>

@@ -1,0 +1,55 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Employee</title>
+    <link rel="stylesheet" href="../public/css/home.css">
+</head>
+
+<body>
+    <div class="topnav">
+        <a href="/home">Home</a>
+        <a href="/create">Create Employee</a>
+        <a href="/payrates">Pay Rates</a>
+    </div>
+    <div class="form">
+        <form action="/update_personal" method="post">
+            <fieldset>
+                <legend class="nav_form">Do you want to delete Employee</legend>
+                <div class="inputgroup">
+                    <label for="idem">EMPLOYMENT_WORKING_TIME_ID:</label>
+                    <input type="text" id="idem" name="idem"
+                        value="<%= personal[0].EMPLOYMENT_WORKING_TIME_ID %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="fname">EMPLOYMENT_ID:</label>
+                    <input type="text" id="fname" name="fname" value="<%= personal[0].EMPLOYMENT_ID %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="lname">YEAR_WORKING:</label>
+                    <input type="date" id="lname" name="lname" value="<%= personal[0].YEAR_WORKING %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="mname">MONTH_WORKING:</label>
+                    <input type="text" id="mname" name="mname" value="<%= personal[0].MONTH_WORKING %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="birthday">NUMBER_DAYS_ACTUAL_OF_WORKING_PER_MONTH:</label>
+                    <input type="text" id="birthday" name="birthday"
+                        value="<%= personal[0].NUMBER_DAYS_ACTUAL_OF_WORKING_PER_MONTH %>"><br><br>
+                </div>
+                <div class="inputgroup">
+                    <label for="ssn">TOTAL_NUMBER_VACATION_WORKING_DAYS_PER_MONTH:</label>
+                    <input type="text" id="ssn" name="ssn"
+                        value="<%= personal[0].TOTAL_NUMBER_VACATION_WORKING_DAYS_PER_MONTH %>"><br><br>
+                </div>
+                <div>
+                    <button>Update</button>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</body>
+
+</html>

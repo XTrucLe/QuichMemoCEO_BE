@@ -240,11 +240,11 @@ WHERE
 }
 
 //create
-const create_mydb_Em = async (idem, emnum, lname, mname, fname, ssn, payrate, idpayrate, vcd, paidtodate, paidlastyear) => {
-    const updatedLastName = mname + ' ' + lname;
+const create_mydb_Em = async (PERSONAL_ID, EmployeeNumber, CURRENT_FIRST_NAME, CURRENT_LAST_NAME, CURRENT_MIDDLE_NAME, SOCIAL_SECURITY_NUMBER, PayRates_idPayRates) => {
+    const updatedLastName = CURRENT_MIDDLE_NAME + ' ' + CURRENT_LAST_NAME;
     let [results, fields] = await connection.query(
-        'INSERT INTO `mydb`.`employee` (`idEmployee`, `EmployeeNumber`, `LastName`, `FirstName`, `SSN`, `PayRate`, `PayRates_idPayRates`, `VacationDays`, `PaidToDate`, `PaidLastYear`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [idem, emnum, updatedLastName, fname, ssn, payrate, idpayrate, vcd, paidtodate, paidlastyear],
+        'INSERT INTO `mydb`.`employee` (`idEmployee`, `EmployeeNumber`, `LastName`, `FirstName`, `SSN`, `PayRates_idPayRates`) VALUES (?, ?, ?, ?, ?)',
+        [PERSONAL_ID, EmployeeNumber, updatedLastName, CURRENT_FIRST_NAME, SOCIAL_SECURITY_NUMBER, PayRates_idPayRates]
 
     );
 }
@@ -257,7 +257,42 @@ const createparate = async (idPayRates, PayRateName, Value, TaxPercentage, PayTy
     );
 }
 
-const createPer = async (idem, lname, fname, mname, birthday, ssn, drivers, adr1, adr2, curcity, curcountry, curzip, curgen, curphone, curmail, curstt, ethnicity, sharestt, benefitid) => {
+const createPer2 = async (PERSONAL_ID, CURRENT_FIRST_NAME, CURRENT_LAST_NAME, CURRENT_MIDDLE_NAME,
+    SOCIAL_SECURITY_NUMBER) => {
+    try {
+        const pool = await poolPromise;
+        const request = pool.request();
+
+        const query = `
+            INSERT INTO [dbo].[PERSONAL] (
+                PERSONAL_ID, CURRENT_FIRST_NAME, CURRENT_LAST_NAME, CURRENT_MIDDLE_NAME, 
+                SOCIAL_SECURITY_NUMBER, 
+            )
+            VALUES (@PERSONAL_ID, @CURRENT_FIRST_NAME, @CURRENT_LAST_NAME, @CURRENT_MIDDLE_NAME,
+                @SOCIAL_SECURITY_NUMBER)
+        `;
+
+        const result = await request
+            .input('PERSONAL_ID', PERSONAL_ID)
+            .input('CURRENT_FIRST_NAME', sql.NVarChar(255), CURRENT_FIRST_NAME)
+            .input('CURRENT_LAST_NAME', sql.NVarChar(255), CURRENT_LAST_NAME)
+            .input('CURRENT_MIDDLE_NAME', sql.NVarChar(255), CURRENT_MIDDLE_NAME)
+            .input('SOCIAL_SECURITY_NUMBER', sql.NVarChar(255), SOCIAL_SECURITY_NUMBER)
+
+            .query(query);
+
+        return result;
+
+    } catch (error) {
+        console.error('Error creating employee:', error);
+        throw error;
+    }
+};
+
+const createPer = async (PERSONAL_ID, CURRENT_FIRST_NAME, CURRENT_LAST_NAME, CURRENT_MIDDLE_NAME, BIRTH_DATE,
+    SOCIAL_SECURITY_NUMBER, DRIVERS_LICENSE, CURRENT_ADDRESS_1, CURRENT_ADDRESS_2, CURRENT_CITY,
+    CURRENT_COUNTRY, CURRENT_ZIP, CURRENT_GENDER, CURRENT_PHONE_NUMBER, CURRENT_PERSONAL_EMAIL,
+    CURRENT_MARITAL_STATUS, ETHNICITY, SHAREHOLDER_STATUS, BENEFIT_PLAN_ID) => {
     try {
         const pool = await poolPromise;
         const request = pool.request();
@@ -269,30 +304,32 @@ const createPer = async (idem, lname, fname, mname, birthday, ssn, drivers, adr1
                 CURRENT_COUNTRY, CURRENT_ZIP, CURRENT_GENDER, CURRENT_PHONE_NUMBER, CURRENT_PERSONAL_EMAIL,
                 CURRENT_MARITAL_STATUS, ETHNICITY, SHAREHOLDER_STATUS, BENEFIT_PLAN_ID
             )
-            VALUES (@idem, @fname, @lname, @mname, @birthday, @ssn, @drivers, @adr1, @adr2, @curcity,
-                @curcountry, @curzip, @curgen, @curphone, @curmail, @curstt, @ethnicity, @sharestt, @benefitid)
+            VALUES (@PERSONAL_ID, @CURRENT_FIRST_NAME, @CURRENT_LAST_NAME, @CURRENT_MIDDLE_NAME, @BIRTH_DATE,
+                @SOCIAL_SECURITY_NUMBER, @DRIVERS_LICENSE, @CURRENT_ADDRESS_1, @CURRENT_ADDRESS_2, @CURRENT_CITY,
+                @CURRENT_COUNTRY, @CURRENT_ZIP, @CURRENT_GENDER, @CURRENT_PHONE_NUMBER, @CURRENT_PERSONAL_EMAIL,
+                @CURRENT_MARITAL_STATUS, @ETHNICITY, @SHAREHOLDER_STATUS, @BENEFIT_PLAN_ID)
         `;
 
         const result = await request
-            .input('idem', idem)
-            .input('fname', sql.NVarChar(255), fname)
-            .input('lname', sql.NVarChar(255), lname)
-            .input('mname', sql.NVarChar(255), mname)
-            .input('birthday', sql.NVarChar(255), birthday)
-            .input('ssn', sql.NVarChar(255), ssn)
-            .input('drivers', sql.NVarChar(255), drivers)
-            .input('adr1', sql.NVarChar(255), adr1)
-            .input('adr2', sql.NVarChar(255), adr2)
-            .input('curcity', sql.NVarChar(255), curcity)
-            .input('curcountry', sql.NVarChar(255), curcountry)
-            .input('curzip', sql.Int, curzip)
-            .input('curgen', sql.NVarChar(255), curgen)
-            .input('curphone', sql.NVarChar(255), curphone)
-            .input('curmail', sql.NVarChar(255), curmail)
-            .input('curstt', sql.NVarChar(255), curstt)
-            .input('ethnicity', sql.NVarChar(255), ethnicity)
-            .input('sharestt', sql.NVarChar(255), sharestt)
-            .input('benefitid', sql.NVarChar(255), benefitid)
+            .input('PERSONAL_ID', PERSONAL_ID)
+            .input('CURRENT_FIRST_NAME', sql.NVarChar(255), CURRENT_FIRST_NAME)
+            .input('CURRENT_LAST_NAME', sql.NVarChar(255), CURRENT_LAST_NAME)
+            .input('CURRENT_MIDDLE_NAME', sql.NVarChar(255), CURRENT_MIDDLE_NAME)
+            .input('BIRTH_DATE', sql.NVarChar(255), BIRTH_DATE)
+            .input('SOCIAL_SECURITY_NUMBER', sql.NVarChar(255), SOCIAL_SECURITY_NUMBER)
+            .input('DRIVERS_LICENSE', sql.NVarChar(255), DRIVERS_LICENSE)
+            .input('CURRENT_ADDRESS_1', sql.NVarChar(255), CURRENT_ADDRESS_1)
+            .input('CURRENT_ADDRESS_2', sql.NVarChar(255), CURRENT_ADDRESS_2)
+            .input('CURRENT_CITY', sql.NVarChar(255), CURRENT_CITY)
+            .input('CURRENT_COUNTRY', sql.NVarChar(255), CURRENT_COUNTRY)
+            .input('CURRENT_ZIP', sql.Int, CURRENT_ZIP)
+            .input('CURRENT_GENDER', sql.NVarChar(255), CURRENT_GENDER)
+            .input('CURRENT_PHONE_NUMBER', sql.NVarChar(255), CURRENT_PHONE_NUMBER)
+            .input('CURRENT_PERSONAL_EMAIL', sql.NVarChar(255), CURRENT_PERSONAL_EMAIL)
+            .input('CURRENT_MARITAL_STATUS', sql.NVarChar(255), CURRENT_MARITAL_STATUS)
+            .input('ETHNICITY', sql.NVarChar(255), ETHNICITY)
+            .input('SHAREHOLDER_STATUS', sql.NVarChar(255), SHAREHOLDER_STATUS)
+            .input('BENEFIT_PLAN_ID', sql.NVarChar(255), BENEFIT_PLAN_ID)
             .query(query);
 
         return result;
@@ -303,13 +340,15 @@ const createPer = async (idem, lname, fname, mname, birthday, ssn, drivers, adr1
     }
 };
 
-const create_HRM_Em = async (employmentCode, employmentStatus, hireDateForWorking, workersCompCode, terminationDate, rehireDateForWorking, lastReviewDate, numberDaysRequirementOfWorkingPerMonth, personalId) => {
+const create_HRM_Em = async (EMPLOYMENT_ID, EMPLOYMENT_CODE, EMPLOYMENT_STATUS, HIRE_DATE_FOR_WORKING, WORKERS_COMP_CODE,
+    TERMINATION_DATE, REHIRE_DATE_FOR_WORKING, LAST_REVIEW_DATE, NUMBER_DAYS_REQUIREMENT_OF_WORKING_PER_MONTH, PERSONAL_ID) => {
     try {
         const pool = await poolPromise;
         const request = pool.request();
 
         const query = `
             INSERT INTO [dbo].[EMPLOYMENT] (
+                EMPLOYMENT_ID,
                 [EMPLOYMENT_CODE],
                 [EMPLOYMENT_STATUS],
                 [HIRE_DATE_FOR_WORKING],
@@ -321,28 +360,22 @@ const create_HRM_Em = async (employmentCode, employmentStatus, hireDateForWorkin
                 [PERSONAL_ID]
             )
             VALUES (
-                @employmentCode,
-                @employmentStatus,
-                @hireDateForWorking,
-                @workersCompCode,
-                @terminationDate,
-                @rehireDateForWorking,
-                @lastReviewDate,
-                @numberDaysRequirementOfWorkingPerMonth,
-                @personalId
+                EMPLOYMENT_ID,EMPLOYMENT_CODE, EMPLOYMENT_STATUS, HIRE_DATE_FOR_WORKING, WORKERS_COMP_CODE, 
+    TERMINATION_DATE, REHIRE_DATE_FOR_WORKING, LAST_REVIEW_DATE, NUMBER_DAYS_REQUIREMENT_OF_WORKING_PER_MONTH, PERSONAL_ID
             )
         `;
 
         const result = await request
-            .input('employmentCode', employmentCode)
-            .input('employmentStatus', employmentStatus)
-            .input('hireDateForWorking', hireDateForWorking)
-            .input('workersCompCode', workersCompCode)
-            .input('terminationDate', terminationDate)
-            .input('rehireDateForWorking', rehireDateForWorking)
-            .input('lastReviewDate', lastReviewDate)
-            .input('numberDaysRequirementOfWorkingPerMonth', numberDaysRequirementOfWorkingPerMonth)
-            .input('personalId', personalId)
+            .input('EMPLOYMENT_CODE', sql.NVarChar(255), EMPLOYMENT_CODE)
+            .input('EMPLOYMENT_STATUS', sql.NVarChar(255), EMPLOYMENT_STATUS)
+            .input('HIRE_DATE_FOR_WORKING', sql.NVarChar(255), HIRE_DATE_FOR_WORKING)
+            .input('WORKERS_COMP_CODE', sql.NVarChar(255), WORKERS_COMP_CODE)
+            .input('TERMINATION_DATE', sql.NVarChar(255), TERMINATION_DATE)
+            .input('REHIRE_DATE_FOR_WORKING', sql.NVarChar(255), REHIRE_DATE_FOR_WORKING)
+            .input('LAST_REVIEW_DATE', sql.NVarChar(255), LAST_REVIEW_DATE)
+            .input('NUMBER_DAYS_REQUIREMENT_OF_WORKING_PER_MONTH', sql.Int, NUMBER_DAYS_REQUIREMENT_OF_WORKING_PER_MONTH)
+            .input('PERSONAL_ID', PERSONAL_ID)
+            .input('EMPLOYMENT_ID', sql.Int, EMPLOYMENT_ID)
             .query(query);
 
         return result;
@@ -353,7 +386,7 @@ const create_HRM_Em = async (employmentCode, employmentStatus, hireDateForWorkin
     }
 };
 
-const create_em_working_time = async (employmentId, yearWorking, monthWorking, numberDaysActualOfWorkingPerMonth, totalNumberVacationWorkingDaysPerMonth) => {
+const create_em_working_time = async (EMPLOYMENT_WORKING_TIME_ID, YEAR_WORKING, MONTH_WORKING, NUMBER_DAYS_ACTUAL_OF_WORKING_PER_MONTH, TOTAL_NUMBER_VACATION_WORKING_DAYS_PER_MONTH) => {
     try {
         const pool = await poolPromise;
         const request = pool.request();
@@ -361,26 +394,28 @@ const create_em_working_time = async (employmentId, yearWorking, monthWorking, n
         const query = `
             INSERT INTO [dbo].[EMPLOYMENT_WORKING_TIME] (
                 [EMPLOYMENT_ID],
+                [EMPLOYMENT_WORKING_TIME_ID],
                 [YEAR_WORKING],
                 [MONTH_WORKING],
                 [NUMBER_DAYS_ACTUAL_OF_WORKING_PER_MONTH],
                 [TOTAL_NUMBER_VACATION_WORKING_DAYS_PER_MONTH]
             )
             VALUES (
-                @employmentId,
-                @yearWorking,
-                @monthWorking,
-                @numberDaysActualOfWorkingPerMonth,
-                @totalNumberVacationWorkingDaysPerMonth
+                @EMPLOYMENT_ID,
+                @EMPLOYMENT_WORKING_TIME_ID, 
+                @YEAR_WORKING, 
+                @MONTH_WORKING, 
+                @NUMBER_DAYS_ACTUAL_OF_WORKING_PER_MONTH, 
+                @TOTAL_NUMBER_VACATION_WORKING_DAYS_PER_MONTH
             )
         `;
 
         const result = await request
-            .input('employmentId', employmentId)
-            .input('yearWorking', yearWorking)
-            .input('monthWorking', monthWorking)
-            .input('numberDaysActualOfWorkingPerMonth', numberDaysActualOfWorkingPerMonth)
-            .input('totalNumberVacationWorkingDaysPerMonth', totalNumberVacationWorkingDaysPerMonth)
+            .input('YEAR_WORKING', sql.NVarChar(255), YEAR_WORKING)
+            .input('MONTH_WORKING', sql.Int, MONTH_WORKING)
+            .input('NUMBER_DAYS_ACTUAL_OF_WORKING_PER_MONTH', sql.Int, NUMBER_DAYS_ACTUAL_OF_WORKING_PER_MONTH)
+            .input('TOTAL_NUMBER_VACATION_WORKING_DAYS_PER_MONTH', sql.Int, TOTAL_NUMBER_VACATION_WORKING_DAYS_PER_MONTH)
+            .input('EMPLOYMENT_WORKING_TIME_ID', sql.Int, EMPLOYMENT_WORKING_TIME_ID)
             .query(query);
 
         return result;
@@ -391,7 +426,8 @@ const create_em_working_time = async (employmentId, yearWorking, monthWorking, n
     }
 };
 
-const createJobHistory = async (employmentId, department, division, fromDate, thruDate, jobTitle, supervisor, location, typeOfWork) => {
+const createJobHistory = async (EMPLOYMENT_ID, DEPARTMENT, DIVISION, FROM_DATE, THRU_DATE,
+    JOB_TITLE, SUPERVISOR, LOCATION, TYPE_OF_WORK) => {
     try {
         const pool = await poolPromise;
         const request = pool.request();
@@ -409,28 +445,28 @@ const createJobHistory = async (employmentId, department, division, fromDate, th
                 [TYPE_OF_WORK]
             )
             VALUES (
-                @employmentId,
-                @department,
-                @division,
-                @fromDate,
-                @thruDate,
-                @jobTitle,
-                @supervisor,
-                @location,
-                @typeOfWork
+                @EMPLOYMENT_ID,
+                @DEPARTMENT,
+                @DIVISION,
+                @FROM_DATE,
+                @THRU_DATE,
+                @JOB_TITLE,
+                @SUPERVISOR,
+                @LOCATION,
+                @TYPE_OF_WORK
             )
         `;
 
         const result = await request
-            .input('employmentId', employmentId)
-            .input('department', department)
-            .input('division', division)
-            .input('fromDate', fromDate)
-            .input('thruDate', thruDate)
-            .input('jobTitle', jobTitle)
-            .input('supervisor', supervisor)
-            .input('location', location)
-            .input('typeOfWork', typeOfWork)
+            .input('EMPLOYMENT_ID', EMPLOYMENT_ID)
+            .input('DEPARTMENT', DEPARTMENT)
+            .input('DIVISION', DIVISION)
+            .input('FROM_DATE', FROM_DATE)
+            .input('THRU_DATE', THRU_DATE)
+            .input('JOB_TITLE', JOB_TITLE)
+            .input('SUPERVISOR', SUPERVISOR)
+            .input('LOCATION', LOCATION)
+            .input('TYPE_OF_WORK', TYPE_OF_WORK)
             .query(query);
 
         return result;
@@ -441,7 +477,7 @@ const createJobHistory = async (employmentId, department, division, fromDate, th
     }
 };
 
-const createBenefitPlan = async (benefitid, planName, deductable, percentageCopay) => {
+const createBenefitPlan = async (BENEFIT_PLANS_ID, PLAN_NAME, DEDUCTABLE, PERCENTAGE_COPAY) => {
     try {
         const pool = await poolPromise;
         const request = pool.request();
@@ -454,18 +490,18 @@ const createBenefitPlan = async (benefitid, planName, deductable, percentageCopa
                 [PERCENTAGE_COPAY]
             )
             VALUES (
-                @benefitid,
-                @planName,
-                @deductable,
-                @percentageCopay
+                @BENEFIT_PLANS_ID,
+                @PLAN_NAME,
+                @DEDUCTABLE,
+                @PERCENTAGE_COPAY
             )
         `;
 
         const result = await request
-            .input('benefitid', benefitid)
-            .input('planName', planName)
-            .input('deductable', deductable)
-            .input('percentageCopay', percentageCopay)
+            .input('BENEFIT_PLANS_ID', BENEFIT_PLANS_ID)
+            .input('PLAN_NAME', PLAN_NAME)
+            .input('DEDUCTABLE', DEDUCTABLE)
+            .input('PERCENTAGE_COPAY', PERCENTAGE_COPAY)
             .query(query);
 
         return result;
@@ -485,12 +521,71 @@ const getallpersonal = async () => {
     const result = await request.query(query);
     return result.recordset; // return only the recordset for further handling in the controller
 };
-
 const getIdpersonal = async (personalid) => {
     const pool = await poolPromise;
     const request = pool.request();
     request.input('personalid', sql.Int, personalid);
-    const query = 'SELECT * FROM [dbo].[PERSONAL] WHERE PERSONAL_ID = @personalid';
+    const query = `SELECT 
+    PERSONAL.PERSONAL_ID , 
+    PERSONAL.CURRENT_FIRST_NAME ,
+    PERSONAL.CURRENT_LAST_NAME ,
+    PERSONAL.CURRENT_MIDDLE_NAME,
+    PERSONAL.BIRTH_DATE ,
+    PERSONAL.SOCIAL_SECURITY_NUMBER ,
+    PERSONAL.DRIVERS_LICENSE ,
+    PERSONAL.CURRENT_ADDRESS_1 ,
+    PERSONAL.CURRENT_ADDRESS_2,
+    PERSONAL.CURRENT_CITY ,
+    PERSONAL.CURRENT_COUNTRY ,
+    PERSONAL.CURRENT_ZIP ,
+    PERSONAL.CURRENT_GENDER ,
+    PERSONAL.CURRENT_PHONE_NUMBER ,
+    PERSONAL.CURRENT_PERSONAL_EMAIL ,
+    PERSONAL.CURRENT_MARITAL_STATUS ,
+    PERSONAL.ETHNICITY,
+    PERSONAL.SHAREHOLDER_STATUS ,
+    PERSONAL.BENEFIT_PLAN_ID ,
+    JOB_HISTORY.JOB_HISTORY_ID ,
+    JOB_HISTORY.DEPARTMENT ,
+    JOB_HISTORY.DIVISION ,
+    JOB_HISTORY.FROM_DATE ,
+    JOB_HISTORY.THRU_DATE ,
+    JOB_HISTORY.JOB_TITLE ,
+    JOB_HISTORY.SUPERVISOR ,
+    JOB_HISTORY.LOCATION ,
+    JOB_HISTORY.TYPE_OF_WORK ,
+    EMPLOYMENT.EMPLOYMENT_ID ,
+    EMPLOYMENT.EMPLOYMENT_CODE ,
+    EMPLOYMENT.EMPLOYMENT_STATUS ,
+    EMPLOYMENT.HIRE_DATE_FOR_WORKING ,
+    EMPLOYMENT.WORKERS_COMP_CODE ,
+    EMPLOYMENT.TERMINATION_DATE ,
+    EMPLOYMENT.REHIRE_DATE_FOR_WORKING ,
+    EMPLOYMENT.LAST_REVIEW_DATE ,
+    EMPLOYMENT.NUMBER_DAYS_REQUIREMENT_OF_WORKING_PER_MONTH ,
+    EMPLOYMENT_WORKING_TIME.EMPLOYMENT_WORKING_TIME_ID ,
+    EMPLOYMENT_WORKING_TIME.YEAR_WORKING ,
+    EMPLOYMENT_WORKING_TIME.MONTH_WORKING ,
+    EMPLOYMENT_WORKING_TIME.NUMBER_DAYS_ACTUAL_OF_WORKING_PER_MONTH ,
+    EMPLOYMENT_WORKING_TIME.TOTAL_NUMBER_VACATION_WORKING_DAYS_PER_MONTH ,
+    BENEFIT_PLANS.BENEFIT_PLANS_ID ,
+    BENEFIT_PLANS.PLAN_NAME ,
+    BENEFIT_PLANS.DEDUCTABLE ,
+    BENEFIT_PLANS.PERCENTAGE_COPAY 
+FROM 
+    PERSONAL,
+    EMPLOYMENT,
+    JOB_HISTORY,
+    EMPLOYMENT_WORKING_TIME,
+    BENEFIT_PLANS
+WHERE 
+    PERSONAL.PERSONAL_ID = @personalid
+    AND PERSONAL.PERSONAL_ID = EMPLOYMENT.PERSONAL_ID 
+    AND EMPLOYMENT.EMPLOYMENT_ID = JOB_HISTORY.JOB_HISTORY_ID 
+    AND PERSONAL.BENEFIT_PLAN_ID = BENEFIT_PLANS.BENEFIT_PLANS_ID
+    AND EMPLOYMENT.EMPLOYMENT_ID = EMPLOYMENT_WORKING_TIME.EMPLOYMENT_ID;
+    
+    `;
     const result = await request.query(query);
     return result.recordset;
 };
@@ -518,7 +613,6 @@ const getIdjobhistory = async (personalid) => {
     const result = await request.query(query);
     return result.recordset;
 };
-//xem lại
 const getIdbenefit = async (benefit) => {
     const pool = await poolPromise;
     const request = pool.request();
@@ -527,7 +621,6 @@ const getIdbenefit = async (benefit) => {
     const result = await request.query(query);
     return result.recordset;
 };
-
 const getallpayrate = async () => {
     let [results, fields] = await connection.query('SELECT * FROM `mydb`.`payrates`;')
     return results
@@ -584,12 +677,12 @@ const get_delete_benefit = async (benefitid) => {
 
 
 //update
-const updateEm = async (idem, emnum, mname, lname, fname, ssn, payrate, idpayrate, vcd, paidtodate, paidlastyear) => {
-    const updatedLastName = mname + ' ' + lname;
+const updateEm = async (PERSONAL_ID, CURRENT_MIDDLE_NAME, CURRENT_LAST_NAME, CURRENT_FIRST_NAME, SOCIAL_SECURITY_NUMBER,) => {
+    const updatedLastName = CURRENT_MIDDLE_NAME + ' ' + CURRENT_LAST_NAME;
 
     let [results, fields] = await connection.query(
-        'UPDATE `mydb`.`employee` SET `EmployeeNumber` = ?, `LastName` = ?, `FirstName` = ?, `SSN` = ?, `PayRate` = ?, `PayRates_idPayRates` = ?, `VacationDays` = ?, `PaidToDate` = ?, `PaidLastYear` = ? WHERE `idEmployee` = ?;',
-        [emnum, updatedLastName, fname, ssn, payrate, idpayrate, vcd, paidtodate, paidlastyear, idem]
+        'UPDATE `mydb`.`employee` SET `LastName` = ?, `FirstName` = ?, `SSN` = ? WHERE `idEmployee` = ?;',
+        [updatedLastName, CURRENT_FIRST_NAME, SOCIAL_SECURITY_NUMBER, PERSONAL_ID]
     )
 }
 
@@ -603,56 +696,58 @@ const update_payrate = async (idPayRates, PayRateName, Value, TaxPercentage, Pay
 
 }
 
-const updatePer = async (idem, lname, fname, mname, birthday, ssn, drivers, adr1, adr2, curcity, curcountry, curzip, curgen, curphone, curmail, curstt, ethnicity, sharestt, benefitid) => {
+const updatePer = async (PERSONAL_ID, CURRENT_FIRST_NAME, CURRENT_LAST_NAME, CURRENT_MIDDLE_NAME, BIRTH_DATE, SOCIAL_SECURITY_NUMBER, DRIVERS_LICENSE,
+    CURRENT_ADDRESS_1, CURRENT_ADDRESS_2, CURRENT_CITY, CURRENT_COUNTRY, CURRENT_ZIP, CURRENT_GENDER, CURRENT_PHONE_NUMBER,
+    CURRENT_PERSONAL_EMAIL, CURRENT_MARITAL_STATUS, ETHNICITY, SHAREHOLDER_STATUS, BENEFIT_PLAN_ID) => {
     try {
         const pool = await poolPromise;
         const request = pool.request();
 
         const query = `
-            UPDATE [dbo].[PERSONAL]
-            SET
-                CURRENT_FIRST_NAME = @fname,
-                CURRENT_LAST_NAME = @lname,
-                CURRENT_MIDDLE_NAME = @mname,
-                BIRTH_DATE = @birthday,
-                SOCIAL_SECURITY_NUMBER = @ssn,
-                DRIVERS_LICENSE = @drivers,
-                CURRENT_ADDRESS_1 = @adr1,
-                CURRENT_ADDRESS_2 = @adr2,
-                CURRENT_CITY = @curcity,
-                CURRENT_COUNTRY = @curcountry,
-                CURRENT_ZIP = @curzip,
-                CURRENT_GENDER = @curgen,
-                CURRENT_PHONE_NUMBER = @curphone,
-                CURRENT_PERSONAL_EMAIL = @curmail,
-                CURRENT_MARITAL_STATUS = @curstt,
-                ETHNICITY = @ethnicity,
-                SHAREHOLDER_STATUS = @sharestt,
-                BENEFIT_PLAN_ID = @benefitid
-            WHERE
-                PERSONAL_ID = @idem
+        UPDATE [dbo].[PERSONAL]
+        SET 
+            [CURRENT_FIRST_NAME] = @CURRENT_FIRST_NAME,
+            [CURRENT_LAST_NAME] = @CURRENT_LAST_NAME,
+            [CURRENT_MIDDLE_NAME] = @CURRENT_MIDDLE_NAME,
+            [BIRTH_DATE] = @BIRTH_DATE,
+            [SOCIAL_SECURITY_NUMBER] = @SOCIAL_SECURITY_NUMBER,
+            [DRIVERS_LICENSE] = @DRIVERS_LICENSE,
+            [CURRENT_ADDRESS_1] = @CURRENT_ADDRESS_1,
+            [CURRENT_ADDRESS_2] = @CURRENT_ADDRESS_2,
+            [CURRENT_CITY] = @CURRENT_CITY,
+            [CURRENT_COUNTRY] = @CURRENT_COUNTRY,
+            [CURRENT_ZIP] = @CURRENT_ZIP,
+            [CURRENT_GENDER] = @CURRENT_GENDER,
+            [CURRENT_PHONE_NUMBER] = @CURRENT_PHONE_NUMBER,
+            [CURRENT_PERSONAL_EMAIL] = @CURRENT_PERSONAL_EMAIL,
+            [CURRENT_MARITAL_STATUS] = @CURRENT_MARITAL_STATUS,
+            [ETHNICITY] = @ETHNICITY,
+            [SHAREHOLDER_STATUS] = @SHAREHOLDER_STATUS,
+            [BENEFIT_PLAN_ID] = @BENEFIT_PLAN_ID
+        WHERE 
+            [PERSONAL_ID] = @PERSONAL_ID;
         `;
 
         const result = await request
-            .input('idem', idem)
-            .input('fname', sql.NVarChar(255), fname)
-            .input('lname', sql.NVarChar(255), lname)
-            .input('mname', sql.NVarChar(255), mname)
-            .input('birthday', sql.NVarChar(255), birthday)
-            .input('ssn', sql.NVarChar(255), ssn)
-            .input('drivers', sql.NVarChar(255), drivers)
-            .input('adr1', sql.NVarChar(255), adr1)
-            .input('adr2', sql.NVarChar(255), adr2)
-            .input('curcity', sql.NVarChar(255), curcity)
-            .input('curcountry', sql.NVarChar(255), curcountry)
-            .input('curzip', sql.Int, curzip)
-            .input('curgen', sql.NVarChar(255), curgen)
-            .input('curphone', sql.NVarChar(255), curphone)
-            .input('curmail', sql.NVarChar(255), curmail)
-            .input('curstt', sql.NVarChar(255), curstt)
-            .input('ethnicity', sql.NVarChar(255), ethnicity)
-            .input('sharestt', sql.NVarChar(255), sharestt)
-            .input('benefitid', sql.NVarChar(255), benefitid)
+            .input('PERSONAL_ID', PERSONAL_ID)
+            .input('CURRENT_FIRST_NAME', sql.NVarChar(255), CURRENT_FIRST_NAME)
+            .input('CURRENT_LAST_NAME', sql.NVarChar(255), CURRENT_LAST_NAME)
+            .input('CURRENT_MIDDLE_NAME', sql.NVarChar(255), CURRENT_MIDDLE_NAME)
+            .input('BIRTH_DATE', sql.NVarChar(255), BIRTH_DATE)
+            .input('SOCIAL_SECURITY_NUMBER', sql.NVarChar(255), SOCIAL_SECURITY_NUMBER)
+            .input('DRIVERS_LICENSE', sql.NVarChar(255), DRIVERS_LICENSE)
+            .input('CURRENT_ADDRESS_1', sql.NVarChar(255), CURRENT_ADDRESS_1)
+            .input('CURRENT_ADDRESS_2', sql.NVarChar(255), CURRENT_ADDRESS_2)
+            .input('CURRENT_CITY', sql.NVarChar(255), CURRENT_CITY)
+            .input('CURRENT_COUNTRY', sql.NVarChar(255), CURRENT_COUNTRY)
+            .input('CURRENT_ZIP', sql.Int, CURRENT_ZIP)
+            .input('CURRENT_GENDER', sql.NVarChar(255), CURRENT_GENDER)
+            .input('CURRENT_PHONE_NUMBER', sql.NVarChar(255), CURRENT_PHONE_NUMBER)
+            .input('CURRENT_PERSONAL_EMAIL', sql.NVarChar(255), CURRENT_PERSONAL_EMAIL)
+            .input('CURRENT_MARITAL_STATUS', sql.NVarChar(255), CURRENT_MARITAL_STATUS)
+            .input('ETHNICITY', sql.NVarChar(255), ETHNICITY)
+            .input('SHAREHOLDER_STATUS', sql.NVarChar(255), SHAREHOLDER_STATUS)
+            .input('BENEFIT_PLAN_ID', sql.NVarChar(255), BENEFIT_PLAN_ID)
             .query(query);
 
         return result;
@@ -663,35 +758,39 @@ const updatePer = async (idem, lname, fname, mname, birthday, ssn, drivers, adr1
     }
 };
 //
-const update_HRM_Em = async (employmentCode, employmentStatus, hireDateForWorking, workersCompCode, terminationDate, rehireDateForWorking, lastReviewDate, numberDaysRequirementOfWorkingPerMonth, personalId) => {
+const update_HRM_Em = async (EMPLOYMENT_CODE, EMPLOYMENT_STATUS, HIRE_DATE_FOR_WORKING, WORKERS_COMP_CODE, TERMINATION_DATE, REHIRE_DATE_FOR_WORKING,
+    LAST_REVIEW_DATE, NUMBER_DAYS_REQUIREMENT_OF_WORKING_PER_MONTH, EMPLOYMENT_ID, PERSONAL_ID) => {
     try {
         const pool = await poolPromise;
         const request = pool.request();
 
         const query = `
-            UPDATE [dbo].[EMPLOYMENT] SET 
-                [EMPLOYMENT_CODE] = @employmentCode,
-                [EMPLOYMENT_STATUS] = @employmentStatus,
-                [HIRE_DATE_FOR_WORKING] = @hireDateForWorking,
-                [WORKERS_COMP_CODE] = @workersCompCode,
-                [TERMINATION_DATE] = @terminationDate,
-                [REHIRE_DATE_FOR_WORKING] = @rehireDateForWorking,
-                [LAST_REVIEW_DATE] = @lastReviewDate,
-                [NUMBER_DAYS_REQUIREMENT_OF_WORKING_PER_MONTH] = @numberDaysRequirementOfWorkingPerMonth
-            WHERE
-            PERSONAL_ID = @personalId
+        UPDATE [dbo].[EMPLOYMENT]
+        SET 
+            [EMPLOYMENT_CODE] = @EMPLOYMENT_CODE,
+            [EMPLOYMENT_STATUS] = @EMPLOYMENT_STATUS,
+            [HIRE_DATE_FOR_WORKING] = @HIRE_DATE_FOR_WORKING,
+            [WORKERS_COMP_CODE] = @WORKERS_COMP_CODE,
+            [TERMINATION_DATE] = @TERMINATION_DATE,
+            [REHIRE_DATE_FOR_WORKING] = @REHIRE_DATE_FOR_WORKING,
+            [LAST_REVIEW_DATE] = @LAST_REVIEW_DATE,
+            [NUMBER_DAYS_REQUIREMENT_OF_WORKING_PER_MONTH] = @NUMBER_DAYS_REQUIREMENT_OF_WORKING_PER_MONTH
+        WHERE 
+            [EMPLOYMENT_ID] = @PERSONAL_ID;
+        
         `;
 
         const result = await request
-            .input('employmentCode', employmentCode)
-            .input('employmentStatus', employmentStatus)
-            .input('hireDateForWorking', hireDateForWorking)
-            .input('workersCompCode', workersCompCode)
-            .input('terminationDate', terminationDate)
-            .input('rehireDateForWorking', rehireDateForWorking)
-            .input('lastReviewDate', lastReviewDate)
-            .input('numberDaysRequirementOfWorkingPerMonth', numberDaysRequirementOfWorkingPerMonth)
-            .input('personalId', personalId)
+            .input('EMPLOYMENT_CODE', sql.NVarChar(255), EMPLOYMENT_CODE)
+            .input('EMPLOYMENT_STATUS', sql.NVarChar(255), EMPLOYMENT_STATUS)
+            .input('HIRE_DATE_FOR_WORKING', sql.NVarChar(255), HIRE_DATE_FOR_WORKING)
+            .input('WORKERS_COMP_CODE', sql.NVarChar(255), WORKERS_COMP_CODE)
+            .input('TERMINATION_DATE', sql.NVarChar(255), TERMINATION_DATE)
+            .input('REHIRE_DATE_FOR_WORKING', sql.NVarChar(255), REHIRE_DATE_FOR_WORKING)
+            .input('LAST_REVIEW_DATE', sql.NVarChar(255), LAST_REVIEW_DATE)
+            .input('NUMBER_DAYS_REQUIREMENT_OF_WORKING_PER_MONTH', sql.Int, NUMBER_DAYS_REQUIREMENT_OF_WORKING_PER_MONTH)
+            .input('PERSONAL_ID', PERSONAL_ID)
+            .input('EMPLOYMENT_ID', sql.Int, EMPLOYMENT_ID)
             .query(query);
 
         return result;
@@ -702,27 +801,29 @@ const update_HRM_Em = async (employmentCode, employmentStatus, hireDateForWorkin
     }
 };
 
-const update_em_working_time = async (employmentId, yearWorking, monthWorking, numberDaysActualOfWorkingPerMonth, totalNumberVacationWorkingDaysPerMonth) => {
+const update_em_working_time = async (EMPLOYMENT_WORKING_TIME_ID, YEAR_WORKING, MONTH_WORKING, NUMBER_DAYS_ACTUAL_OF_WORKING_PER_MONTH, TOTAL_NUMBER_VACATION_WORKING_DAYS_PER_MONTH,) => {
     try {
         const pool = await poolPromise;
         const request = pool.request();
 
         const query = `
-            UPDATE [dbo].[EMPLOYMENT_WORKING_TIME] SET 
-                [YEAR_WORKING] = @yearWorking,
-                [MONTH_WORKING] = @monthWorking,
-                [NUMBER_DAYS_ACTUAL_OF_WORKING_PER_MONTH] = @numberDaysActualOfWorkingPerMonth,
-                [TOTAL_NUMBER_VACATION_WORKING_DAYS_PER_MONTH] = @totalNumberVacationWorkingDaysPerMonth
-            WHERE
-            EMPLOYMENT_ID = @employmentId
+        UPDATE [dbo].[EMPLOYMENT_WORKING_TIME]
+        SET 
+            [YEAR_WORKING] = @YEAR_WORKING,
+            [MONTH_WORKING] = @MONTH_WORKING,
+            [NUMBER_DAYS_ACTUAL_OF_WORKING_PER_MONTH] = @NUMBER_DAYS_ACTUAL_OF_WORKING_PER_MONTH,
+            [TOTAL_NUMBER_VACATION_WORKING_DAYS_PER_MONTH] = @TOTAL_NUMBER_VACATION_WORKING_DAYS_PER_MONTH
+        WHERE 
+            [EMPLOYMENT_WORKING_TIME_ID] = @EMPLOYMENT_WORKING_TIME_ID;
+        
         `;
 
         const result = await request
-            .input('employmentId', employmentId)
-            .input('yearWorking', yearWorking)
-            .input('monthWorking', monthWorking)
-            .input('numberDaysActualOfWorkingPerMonth', numberDaysActualOfWorkingPerMonth)
-            .input('totalNumberVacationWorkingDaysPerMonth', totalNumberVacationWorkingDaysPerMonth)
+            .input('YEAR_WORKING', sql.NVarChar(255), YEAR_WORKING)
+            .input('MONTH_WORKING', sql.Int, MONTH_WORKING)
+            .input('NUMBER_DAYS_ACTUAL_OF_WORKING_PER_MONTH', sql.Int, NUMBER_DAYS_ACTUAL_OF_WORKING_PER_MONTH)
+            .input('TOTAL_NUMBER_VACATION_WORKING_DAYS_PER_MONTH', sql.Int, TOTAL_NUMBER_VACATION_WORKING_DAYS_PER_MONTH)
+            .input('EMPLOYMENT_WORKING_TIME_ID', sql.Int, EMPLOYMENT_WORKING_TIME_ID)
             .query(query);
 
         return result;
@@ -733,36 +834,33 @@ const update_em_working_time = async (employmentId, yearWorking, monthWorking, n
     }
 };
 
-const update_JobHistory = async (employmentId, department, division, fromDate, thruDate, jobTitle, supervisor, location, typeOfWork) => {
+const update_JobHistory = async (EMPLOYMENT_ID, DEPARTMENT, DIVISION, JOB_TITLE, SUPERVISOR, LOCATION, TYPE_OF_WORK,) => {
     try {
         const pool = await poolPromise;
         const request = pool.request();
 
         const query = `
-            UPDATE [dbo].[JOB_HISTORY] SET 
-                [DEPARTMENT] = @department,
-                [DIVISION] = @division,
-                [FROM_DATE] = @fromDate,
-                [THRU_DATE] = @thruDate,
-                [JOB_TITLE] = @jobTitle,
-                [SUPERVISOR] = @supervisor,
-                [LOCATION] = @location,
-                [TYPE_OF_WORK] = @typeOfWork
-            WHERE
-            EMPLOYMENT_ID = @employmentId
-        `;
+        UPDATE [dbo].[JOB_HISTORY]
+        SET 
+            [DEPARTMENT] = @DEPARTMENT,
+            [DIVISION] = @DIVISION,
+            [JOB_TITLE] = @JOB_TITLE,
+            [SUPERVISOR] = @SUPERVISOR,
+            [LOCATION] = @LOCATION
 
+        WHERE 
+        [EMPLOYMENT_ID] = @EMPLOYMENT_ID;
+        
+        `;
         const result = await request
-            .input('employmentId', employmentId)
-            .input('department', department)
-            .input('division', division)
-            .input('fromDate', fromDate)
-            .input('thruDate', thruDate)
-            .input('jobTitle', jobTitle)
-            .input('supervisor', supervisor)
-            .input('location', location)
-            .input('typeOfWork', typeOfWork)
+            .input('EMPLOYMENT_ID', sql.Int, EMPLOYMENT_ID)
+            .input('DEPARTMENT', sql.NVarChar(255), DEPARTMENT)
+            .input('DIVISION', sql.NVarChar(255), DIVISION)
+            .input('JOB_TITLE', sql.NVarChar(255), JOB_TITLE)
+            .input('SUPERVISOR', sql.NVarChar(255), SUPERVISOR)
+            .input('LOCATION', sql.NVarChar(255), LOCATION)
             .query(query);
+
 
         return result;
 
@@ -805,6 +903,8 @@ const update_BenefitPlan = async (benefitid, planName, deductable, percentageCop
 
 
 
+
+
 //dashboard
 const get_dash_board_department = async (personalid) => {
     const pool = await poolPromise;
@@ -840,7 +940,7 @@ module.exports = {
     getall_employee_more_vacation, getall_employee_in_hiringday,
     //create
     create_mydb_Em, createPer, getallpersonal,
-    create_HRM_Em, createparate,
+    create_HRM_Em, createparate, createPer2,
     create_em_working_time, createJobHistory, createBenefitPlan,
     //getID
     getIdEmployee, getIdpersonal, getallpayrate, getIdpayrate,
@@ -853,6 +953,7 @@ module.exports = {
     get_dash_board_department,
     get_dash_board_department_vacation,
     //update
+
     updateEm, updatePer, update_HRM_Em,
     update_em_working_time, update_JobHistory,
     update_BenefitPlan, update_payrate,
