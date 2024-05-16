@@ -49,7 +49,7 @@ router.get('/income', see_income)
 router.get('/vacation_days', see_vacationday)
 router.get('/shareholder', see_avg_shareholder)
 // inform
-router.get('/employment_in_aniversary', see_employee_in_hiringday)
+router.get('/i', see_employee_in_hiringday)
 router.get('/birthday', see_birthday)
 router.get('/efectplan', see_efectplan)
 router.get('/more_vacation', see_employee_more_vacation)
@@ -70,7 +70,7 @@ router.delete('/deleteinfo', deleteinfo)
 //update
 update
 router.post('/updateAll/:id', getEmployeeId)//
-router.put('/updateAll', update)
+router.post('/updateAll', update)
 
 
 //

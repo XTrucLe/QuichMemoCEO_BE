@@ -314,7 +314,7 @@ const getpayrateid = async (req, res) => {
 
 const gethomepage = async (req, res) => {
     let results = await getallpersonal();
-    return res.json({ personal: results })
+    return res.render('home_personal.ejs', { personal: results })
 }
 
 const get_benefitId = async (req, res) => {
@@ -376,7 +376,7 @@ const update = async (req, res) => {
     await update_em_working_time(EMPLOYMENT_WORKING_TIME_ID, YEAR_WORKING, MONTH_WORKING, NUMBER_DAYS_ACTUAL_OF_WORKING_PER_MONTH,
         TOTAL_NUMBER_VACATION_WORKING_DAYS_PER_MONTH,)
     await update_JobHistory(JOB_HISTORY_ID, DEPARTMENT, DIVISION, FROM_DATE, THRU_DATE, JOB_TITLE, SUPERVISOR, LOCATION, TYPE_OF_WORK, EMPLOYMENT_ID)
-    await updateEm(PERSONAL_ID, CURRENT_MIDDLE_NAME, CURRENT_LAST_NAME, CURRENT_FIRST_NAME, SOCIAL_SECURITY_NUMBER,)
+    await updateEm(PERSONAL_ID, EMPLOYMENT_CODE, CURRENT_MIDDLE_NAME, CURRENT_LAST_NAME, CURRENT_FIRST_NAME, SOCIAL_SECURITY_NUMBER,)
 
     return res.send('ok baby oiiiiiii.ejs');
 };
