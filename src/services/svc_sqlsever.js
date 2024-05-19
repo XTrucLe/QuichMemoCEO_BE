@@ -1,6 +1,21 @@
 const poolPromise = require('../config/conn_sqlsever');
 const sql = require('mssql');
+const connection = require("../config/conn_mysql");
 
+
+const getPersonInfor = async (personalID) => {
+    try {
+        const pool = await poolPromise;
+        const request = pool.request();
+        request.input('personalID', sql.Int, personalID);
+        let result = await request.query('SELECT * FROM [dbo].[PERSONAL] WHERE PERSONAL_ID = @personalID',{ personalID })
+
+        return result.recordset;
+    } catch (error) {
+        console.error("Error fetching person information:", error);
+        // Handle error gracefully, potentially return an empty object or display an error message to the user.
+    }
+}
 const getallbenefit = async () => {
     const pool = await poolPromise;
     const request = pool.request();
@@ -47,11 +62,11 @@ const getIdpersonal = async (personalid) => {
     return result.recordset;
 };
 const createEmployee = async (req, res) => {
-    let { idem, emnum, lname, fname, ssn, payrate, idpayrate, vcd, paidtodate, paidlastyear } = req.body;
+    let {idem, emnum, lname, fname, ssn, payrate, idpayrate, vcd, paidtodate, paidlastyear} = req.body;
 
     await createEm(idem, emnum, lname, fname, ssn, payrate, idpayrate, vcd, paidtodate, paidlastyear)
     let results = await getallusers();
-    return res.json({ employee_create: results });
+    return res.json({employee_create: results});
     //=====>đưa ra chuỗi 
 
 };
@@ -100,8 +115,28 @@ const createAllpersonal = async (idem, lname, fname, mname, birthday, ssn, drive
         throw error;
     }
 };
+const getManagerFields=async ()=>{
+    const pool = await poolPromise;
+    const request = pool.request();
+    const query = `SELECT 
+    COUNT(*) AS TotalEmployees,
+    SUM(CASE WHEN EMPLOYMENT_STATUS = 'Active' THEN 1 ELSE 0 END) AS ActiveEmployees,
+    SUM(CASE WHEN EMPLOYMENT_STATUS != 'Active' THEN 1 ELSE 0 END) AS NotActiveEmployees
+FROM 
+    EMPLOYMENT;`;
 
+    const result = await request.query(query);
+    return result.recordset;
+}
 
-
-
-module.exports = { getallbenefit, getallemployment, getallemployment_working, getalljob_history, getallpersonal, getIdpersonal, createAllpersonal };
+module.exports = {
+    getallbenefit,
+    getallemployment,
+    getallemployment_working,
+    getalljob_history,
+    getallpersonal,
+    getIdpersonal,
+    createAllpersonal,
+    getPersonInfor,
+    getManagerFields,
+};
