@@ -189,7 +189,7 @@ const creates_hrm_em = async (req, res) => {
         } = req.body;
         const [record] = await getPersonInfor(PERSONAL_ID)
         if (!record) {
-            throw new Error('Incomplete employee information returned');
+            return res.status(500).send(`An error don't have a personal ID in database.`);
         }
         const {
             CURRENT_FIRST_NAME,
@@ -366,7 +366,8 @@ const get_JobHistoryid = async (req, res) => {
 
 
 const deleteinfo = async (req, res) => {
-    const id = req.body.idem;
+    const id = req.params.id;
+    console.log(req.params.id)
     await deletebyemployee(id);
     await deletebyperson(id);
     return res.render('home_personal.ejs');
@@ -465,8 +466,8 @@ const dash_board_department = async (req, res) => {
     const dash_board_department = await get_dash_board_department();
     const dash_board_department_vacation = await get_dash_board_department_vacation();
     return res.json({dash_board_department, dash_board_department_vacation});
-
 }
+
 const dash_board_department_vacation = async (req, res) => {
     return res.json({dash_board_department_vacation});
 

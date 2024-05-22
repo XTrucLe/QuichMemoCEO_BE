@@ -65,8 +65,9 @@ router.get('/createbenefit', create_bf_render)
 router.post('/benefit', creates_bnf)
 //delete
 router.post('/personal/:id', getEmployeeId)
+
 //xoá là xóa hết toàn bộ thông tin luôn
-router.delete('/deleteinfo', deleteinfo)
+router.delete('/deleteinfo/:id', deleteinfo)
 //update
 // update
 router.post('/updateAll/:id', getEmployeeId)//

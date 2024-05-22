@@ -67,17 +67,12 @@ const getEmployeeDataFromSqlServer = async () => {
                 WHEN JOB_HISTORY.TYPE_OF_WORK = 0 THEN 'part time'
                 ELSE 'other' 
             END AS TYPE_OF_WORKS
-        FROM 
-            PERSONAL,
-            EMPLOYMENT,
-            JOB_HISTORY,
-            EMPLOYMENT_WORKING_TIME,
-            BENEFIT_PLANS
-        WHERE 
-            PERSONAL.PERSONAL_ID = EMPLOYMENT.PERSONAL_ID 
-            AND EMPLOYMENT.EMPLOYMENT_ID = JOB_HISTORY.JOB_HISTORY_ID 
-            AND PERSONAL.BENEFIT_PLAN_ID = BENEFIT_PLANS.BENEFIT_PLANS_ID
-            AND EMPLOYMENT.EMPLOYMENT_ID = EMPLOYMENT_WORKING_TIME.EMPLOYMENT_ID;
+       FROM 
+            PERSONAL
+            JOIN EMPLOYMENT ON PERSONAL.PERSONAL_ID = EMPLOYMENT.PERSONAL_ID
+            LEFT JOIN EMPLOYMENT_WORKING_TIME ON EMPLOYMENT.EMPLOYMENT_ID = EMPLOYMENT_WORKING_TIME.EMPLOYMENT_ID
+            LEFT JOIN JOB_HISTORY ON EMPLOYMENT.EMPLOYMENT_ID = JOB_HISTORY.JOB_HISTORY_ID
+            JOIN BENEFIT_PLANS ON PERSONAL.BENEFIT_PLAN_ID = BENEFIT_PLANS.BENEFIT_PLANS_ID;
 
         `);
 
@@ -242,11 +237,11 @@ const getall_employee_in_hiringday = async () => {
 const create_mydb_Em = async (CURRENT_FIRST_NAME, CURRENT_LAST_NAME, CURRENT_MIDDLE_NAME, SOCIAL_SECURITY_NUMBER, EMPLOYMENT_ID) => {
     const updatedLastName = `${CURRENT_LAST_NAME} ${CURRENT_MIDDLE_NAME}`;
 
-    const idEmployee = Math.floor(Math.random() * 11000)
+    const EmployeeNumber = Math.floor(Math.random() * 11000)
 
     let [results, fields] = await connection.query(
         'INSERT INTO `mydb`.`employee` (`idEmployee`,`EmployeeNumber`, `LastName`, `FirstName`, `SSN`, `PayRates_idPayRates`) VALUES (?, ?, ?, ?, ?,?)',
-        [idEmployee, EMPLOYMENT_ID, updatedLastName, CURRENT_FIRST_NAME, SOCIAL_SECURITY_NUMBER, 1]
+        [EMPLOYMENT_ID, EmployeeNumber , updatedLastName, CURRENT_FIRST_NAME, SOCIAL_SECURITY_NUMBER, 1]
     );
 }
 
@@ -328,8 +323,8 @@ const createPer = async (PERSONAL_ID, CURRENT_FIRST_NAME, CURRENT_LAST_NAME, CUR
             .input('CURRENT_PERSONAL_EMAIL', sql.NVarChar(255), CURRENT_PERSONAL_EMAIL)
             .input('CURRENT_MARITAL_STATUS', sql.NVarChar(255), CURRENT_MARITAL_STATUS)
             .input('ETHNICITY', sql.NVarChar(255), ETHNICITY)
-            .input('SHAREHOLDER_STATUS', sql.NVarChar(255), SHAREHOLDER_STATUS)
-            .input('BENEFIT_PLAN_ID', sql.NVarChar(255), BENEFIT_PLAN_ID)
+            .input('SHAREHOLDER_STATUS', sql.Int, SHAREHOLDER_STATUS)
+            .input('BENEFIT_PLAN_ID', sql.Int, BENEFIT_PLAN_ID)
             .query(query);
 
         return result;
@@ -668,17 +663,20 @@ const deletebyemployee = async (id) => {
     )
 }
 
-const deletebyperson = async (personalid) => {
+const deletebyperson = async (employmentId) => {
     const pool = await poolPromise;
     const request = pool.request();
-    request.input('personalid', sql.Int, personalid);
+    request.input('employmentId', sql.Int, employmentId);
 
     // Construct the query with placeholders and execute it
     const query = `
-        DELETE FROM EMPLOYMENT_WORKING_TIME WHERE EMPLOYMENT_ID IN (SELECT EMPLOYMENT_ID FROM EMPLOYMENT WHERE PERSONAL_ID = @personalid);
-        DELETE FROM JOB_HISTORY WHERE EMPLOYMENT_ID IN (SELECT EMPLOYMENT_ID FROM EMPLOYMENT WHERE PERSONAL_ID = @personalid);
-        DELETE FROM EMPLOYMENT WHERE PERSONAL_ID = @personalid;
-        DELETE FROM PERSONAL WHERE PERSONAL_ID = @personalid;
+        DECLARE @personalId INT;
+        SELECT @personalId = PERSONAL_ID FROM EMPLOYMENT WHERE EMPLOYMENT_ID = @employmentId;
+
+        DELETE FROM EMPLOYMENT_WORKING_TIME WHERE EMPLOYMENT_ID = @employmentId;
+        DELETE FROM JOB_HISTORY WHERE EMPLOYMENT_ID = @employmentId;
+        DELETE FROM EMPLOYMENT WHERE EMPLOYMENT_ID = @employmentId;
+        DELETE FROM PERSONAL WHERE PERSONAL_ID = @personalId;
     `;
 
     try {
